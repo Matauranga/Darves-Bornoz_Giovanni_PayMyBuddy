@@ -1,10 +1,12 @@
 package com.paymybuddy.paymybuddyapp.repository;
 
-import com.paymybuddy.paymybuddyapp.model.User;
+
+import com.paymybuddy.paymybuddyapp.model.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
+import java.util.UUID;
 
+@Repository
+public interface RoleRepository extends CrudRepository<Role, UUID> {
 }
