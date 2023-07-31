@@ -8,12 +8,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
@@ -21,20 +18,15 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Bean
-    public static PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { //TODO penser avant de rendre le projet à verifier si possible de changer les methods depreciate
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/register/**").permitAll()
+                        authorize.requestMatchers("/signUp/**").permitAll()
                                 .requestMatchers("/index").permitAll()
                                 .requestMatchers("/users").permitAll()
                                 .requestMatchers(toH2Console())
@@ -42,10 +34,11 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 ).formLogin(
-                        form -> form
+                        form -> form //TODO : Franck l'ordre est'il important ici ou au dessus par ex ? et si oui comment on le pense ?
                                 .loginPage("/login")
+                                .usernameParameter("email")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/users")
+                                .defaultSuccessUrl("/index")
                                 .permitAll()
                 ).logout(
                         logout -> logout
@@ -54,7 +47,14 @@ public class SecurityConfig {
                 ).headers()
                 .frameOptions()
                 .disable();
+
         return http.build();
+    }
+
+    //TODO : Franck comment ça marche ?
+    @Bean
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Autowired
@@ -63,56 +63,4 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
-
-
-//    @Bean
-//    public static PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.csrf().disable()
-//                .authorizeHttpRequests((requests) -> requests
-//                        .requestMatchers(toH2Console())
-//                        .permitAll()
-//                        .anyRequest()
-//                        .authenticated()
-//                ).formLogin(
-//                        form -> form
-//                                .loginPage("/loginExemple")
-//                                .loginProcessingUrl("/loginExemple")
-//                                .defaultSuccessUrl("/welcome")
-//                                .permitAll()
-//                ).logout(
-//                        logout -> logout
-//                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//                                .permitAll()
-//                )
-//                .headers()
-//                .frameOptions()
-//                .disable();
-//
-//        return http.build();
-//    }
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//
-//        UserDetails ramesh = User.builder()
-//                .username("ramesh")
-//                .password(passwordEncoder().encode("password"))
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder().encode("admin"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(ramesh, admin);
-//    }
-
-
 }

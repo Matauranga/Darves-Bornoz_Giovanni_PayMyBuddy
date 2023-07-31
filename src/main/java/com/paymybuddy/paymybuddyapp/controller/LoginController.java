@@ -19,16 +19,19 @@ public class LoginController {
     @Autowired
     private PersonService personService;
 
+
     @GetMapping("/index")
     public String home() {
         return "index";
     }
 
+
     // handler method to handle login request
     @GetMapping("/login")
     public String login() {
-        return "loginExemple";
+        return "login";
     }
+
 
     // handler method to handle user registration form request
     @GetMapping("/signUp")
@@ -42,12 +45,11 @@ public class LoginController {
 
     // handler method to handle user registration form submit request
     @PostMapping("/signUp/save")
-    public String registration(@Valid @ModelAttribute("person") RegisterPersonDTO registerPersonDTO,
-                               BindingResult result,
-                               Model model) {
-        Person existingUser = personService.findUserByEmail(registerPersonDTO.getEmail());
+    public String registration(@Valid @ModelAttribute("person") RegisterPersonDTO registerPersonDTO, BindingResult result, Model model) {
 
-        if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
+        Person existingPerson = personService.findUserByEmail(registerPersonDTO.getEmail());
+
+        if (existingPerson != null && existingPerson.getEmail() != null && !existingPerson.getEmail().isEmpty()) {
             result.rejectValue("email", null,
                     "There is already an account registered with the same email");
         }
@@ -60,14 +62,5 @@ public class LoginController {
         personService.saveUser(registerPersonDTO);
         return "redirect:/signUp?success";
     }
-
-
-  /*  @GetMapping("/users")
-    public String users(Model model) {
-        List<RegisterPersonDTO> users = personService.findAllUsers();
-        model.addAttribute("users", users);
-        return "users";
-    }*/
-
 
 }

@@ -8,10 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -23,7 +21,6 @@ public class PersonServiceImpl implements PersonService {
 
 
     public Iterable<Person> getAllPersons() {
-
         return personRepository.findAll();
     }
 
@@ -32,9 +29,11 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.findById(id);
     }
 
+
     public Person savePerson(Person person) {
         return personRepository.save(person);
     }
+
 
     public void updatePerson(UUID id, UpdatePersonDTO person) {
         Person personToUpdate = this.personRepository.findById(id)
@@ -47,25 +46,23 @@ public class PersonServiceImpl implements PersonService {
         this.personRepository.save(personToUpdate);
     }
 
+    public record UpdatePersonDTO(String firstname, String lastname, String email) { //TODO à voir
+    }
+
     public void deletePerson(Person personToDelete) {
         personRepository.deleteById(personToDelete.getPersonId());
     }
+
 
     public void addConnection(Person person, Person friend) {
         person.getConnectionsList().add(friend);
     }
 
+
     public void removeConnection(Person person, Person friendToDelete) {
         person.getConnectionsList().remove(friendToDelete);
     }
 
-    public record UpdatePersonDTO(String firstname, String lastname, String email) {
-    }
-
-
-    /**
-     * @param registerPersonDTO
-     */
 
     public void saveUser(RegisterPersonDTO registerPersonDTO) {
         Person person = new Person();
@@ -73,7 +70,6 @@ public class PersonServiceImpl implements PersonService {
         person.setLastname(registerPersonDTO.getLastName());
         person.setBirthdate(LocalDate.parse(registerPersonDTO.getBirthdate()));
         person.setEmail(registerPersonDTO.getEmail());
-
 
         // encrypt the password using spring security
         person.setPassword(passwordEncoder.encode(registerPersonDTO.getPassword()));
@@ -86,25 +82,4 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.findByEmail(email);
     }
 
-
-   /* public List<RegisterPersonDTO> findAllUsers() {
-        List<Person> users = (List<Person>) personRepository.findAll();
-        return users.stream()
-                .map(this::mapToUserDto)
-                .collect(Collectors.toList());
-    }
-
-    private RegisterPersonDTO mapToUserDto(Person person) {
-        RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO();
-        String[] str = person.getName().split(" ");
-        registerPersonDTO.setFirstName(str[0]);
-        registerPersonDTO.setLastName(str[1]);
-        registerPersonDTO.setEmail(person.getEmail());
-        return registerPersonDTO;
-    }*/
-
-
-/**
- *
- */
 }
