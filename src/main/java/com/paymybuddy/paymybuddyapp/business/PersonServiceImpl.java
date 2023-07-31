@@ -1,15 +1,13 @@
 package com.paymybuddy.paymybuddyapp.business;
 
-import com.paymybuddy.paymybuddyapp.DTO.PersonDTO;
+import com.paymybuddy.paymybuddyapp.DTO.RegisterPersonDTO;
 import com.paymybuddy.paymybuddyapp.model.Person;
-import com.paymybuddy.paymybuddyapp.model.Role;
 import com.paymybuddy.paymybuddyapp.repository.PersonRepository;
-import com.paymybuddy.paymybuddyapp.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,8 +18,6 @@ public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private PersonRepository personRepository;
-    @Autowired
-    private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -68,15 +64,19 @@ public class PersonServiceImpl implements PersonService {
 
 
     /**
-     * @param personDTO
+     * @param registerPersonDTO
      */
 
-    public void saveUser(PersonDTO personDTO) {
+    public void saveUser(RegisterPersonDTO registerPersonDTO) {
         Person person = new Person();
-        person.setName(personDTO.getFirstName() + " " + personDTO.getLastName());
-        person.setEmail(personDTO.getEmail());
+        person.setFirstname(registerPersonDTO.getFirstName());
+        person.setLastname(registerPersonDTO.getLastName());
+        person.setBirthdate(LocalDate.parse(registerPersonDTO.getBirthdate()));
+        person.setEmail(registerPersonDTO.getEmail());
+
+
         // encrypt the password using spring security
-        person.setPassword(passwordEncoder.encode(personDTO.getPassword()));
+        person.setPassword(passwordEncoder.encode(registerPersonDTO.getPassword()));
 
         personRepository.save(person);
     }
@@ -87,27 +87,21 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-    public List<PersonDTO> findAllUsers() {
+   /* public List<RegisterPersonDTO> findAllUsers() {
         List<Person> users = (List<Person>) personRepository.findAll();
         return users.stream()
                 .map(this::mapToUserDto)
                 .collect(Collectors.toList());
     }
 
-    private PersonDTO mapToUserDto(Person person) {
-        PersonDTO personDTO = new PersonDTO();
+    private RegisterPersonDTO mapToUserDto(Person person) {
+        RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO();
         String[] str = person.getName().split(" ");
-        personDTO.setFirstName(str[0]);
-        personDTO.setLastName(str[1]);
-        personDTO.setEmail(person.getEmail());
-        return personDTO;
-    }
-
-    private Role checkRoleExist() {
-        Role role = new Role();
-        role.setName("ROLE_ADMIN");
-        return roleRepository.save(role);
-    }
+        registerPersonDTO.setFirstName(str[0]);
+        registerPersonDTO.setLastName(str[1]);
+        registerPersonDTO.setEmail(person.getEmail());
+        return registerPersonDTO;
+    }*/
 
 
 /**

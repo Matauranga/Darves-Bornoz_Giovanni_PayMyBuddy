@@ -1,6 +1,6 @@
 package com.paymybuddy.paymybuddyapp.business;
 
-import com.paymybuddy.paymybuddyapp.DTO.PersonDTO;
+import com.paymybuddy.paymybuddyapp.DTO.RegisterPersonDTO;
 import com.paymybuddy.paymybuddyapp.model.Person;
 
 import java.util.List;
@@ -21,10 +21,10 @@ public interface PersonService {
     public void removeConnection(Person person, Person friendToDelete);
 
 
-    void saveUser(PersonDTO personDto);
+    void saveUser(RegisterPersonDTO registerPersonDto);
 
     Person findUserByEmail(String email);
 
-    List<PersonDTO> findAllUsers();
+    //   List<RegisterPersonDTO> findAllUsers();
 
 }

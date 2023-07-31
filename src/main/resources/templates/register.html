@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
@@ -16,7 +14,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">Registration and Login System</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -28,7 +27,9 @@
         </div>
     </div>
 </nav>
-<br /><br /><br />
+<br/><br/><br/>
+
+
 <div class="container">
     <div class="row col-md-8 offset-md-2">
         <div class="card">
@@ -41,6 +42,7 @@
                 </div>
             </div>
             <div class="card-body">
+
                 <form
                         method="post"
                         role="form"
@@ -57,7 +59,7 @@
                                 th:field="*{firstName}"
                                 type="text"
                         />
-                        <p th:errors = "*{firstName}" class="text-danger"
+                        <p th:errors="*{firstName}" class="text-danger"
                            th:if="${#fields.hasErrors('firstName')}"></p>
                     </div>
 
@@ -71,7 +73,7 @@
                                 th:field="*{lastName}"
                                 type="text"
                         />
-                        <p th:errors = "*{lastName}" class="text-danger"
+                        <p th:errors="*{lastName}" class="text-danger"
                            th:if="${#fields.hasErrors('lastName')}"></p>
                     </div>
 
@@ -85,7 +87,7 @@
                                 th:field="*{email}"
                                 type="email"
                         />
-                        <p th:errors = "*{email}" class="text-danger"
+                        <p th:errors="*{email}" class="text-danger"
                            th:if="${#fields.hasErrors('email')}"></p>
                     </div>
 
@@ -99,7 +101,7 @@
                                 th:field="*{password}"
                                 type="password"
                         />
-                        <p th:errors = "*{password}" class="text-danger"
+                        <p th:errors="*{password}" class="text-danger"
                            th:if="${#fields.hasErrors('password')}"></p>
                     </div>
                     <div class="form-group">

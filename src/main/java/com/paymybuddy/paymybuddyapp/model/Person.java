@@ -1,6 +1,7 @@
 package com.paymybuddy.paymybuddyapp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,9 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,14 +27,19 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "person_id")
     private UUID personId;
-    @Column(name = "firstname")
+
     private String firstname;
-    @Column(name = "lastname")
+
     private String lastname;
+
+    private LocalDate birthdate;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "password")
     private String password;
+
     @Column(name = "amount_balance")
     private BigDecimal amountBalance;
 
@@ -42,22 +50,6 @@ public class Person {
     })
     @ManyToMany(fetch = FetchType.EAGER)
     List<Person> connectionsList = new ArrayList<>();
-
-
-    /**
-     *
-     */
-    private String name;
-
-
-    @JoinTable(name = "users_roles", joinColumns = {
-            @JoinColumn(name = "USER_ID", referencedColumnName = "person_id")
-    }, inverseJoinColumns = {
-            @JoinColumn(name = "ROLE_ID", referencedColumnName = "role_id")
-    })
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Role> roles = new ArrayList<>();
-
 
     /**
      * @param amount

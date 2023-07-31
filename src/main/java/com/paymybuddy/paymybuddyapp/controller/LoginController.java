@@ -1,6 +1,6 @@
 package com.paymybuddy.paymybuddyapp.controller;
 
-import com.paymybuddy.paymybuddyapp.DTO.PersonDTO;
+import com.paymybuddy.paymybuddyapp.DTO.RegisterPersonDTO;
 import com.paymybuddy.paymybuddyapp.business.PersonService;
 import com.paymybuddy.paymybuddyapp.model.Person;
 import jakarta.validation.Valid;
@@ -31,21 +31,21 @@ public class LoginController {
     }
 
     // handler method to handle user registration form request
-    @GetMapping("/register")
+    @GetMapping("/signUp")
     public String showRegistrationForm(Model model) {
         // create model object to store form data
-        PersonDTO user = new PersonDTO();
-        model.addAttribute("user", user);
-        return "register";
+        RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO();
+        model.addAttribute("person", registerPersonDTO);
+        return "signUp";
     }
 
 
     // handler method to handle user registration form submit request
-    @PostMapping("/register/save")
-    public String registration(@Valid @ModelAttribute("user") PersonDTO userDto,
+    @PostMapping("/signUp/save")
+    public String registration(@Valid @ModelAttribute("person") RegisterPersonDTO registerPersonDTO,
                                BindingResult result,
                                Model model) {
-        Person existingUser = personService.findUserByEmail(userDto.getEmail());
+        Person existingUser = personService.findUserByEmail(registerPersonDTO.getEmail());
 
         if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
             result.rejectValue("email", null,
@@ -53,21 +53,21 @@ public class LoginController {
         }
 
         if (result.hasErrors()) {
-            model.addAttribute("user", userDto);
-            return "/register";
+            model.addAttribute("person", registerPersonDTO);
+            return "/signUp";
         }
 
-        personService.saveUser(userDto);
-        return "redirect:/register?success";
+        personService.saveUser(registerPersonDTO);
+        return "redirect:/signUp?success";
     }
 
 
-    @GetMapping("/users")
+  /*  @GetMapping("/users")
     public String users(Model model) {
-        List<PersonDTO> users = personService.findAllUsers();
+        List<RegisterPersonDTO> users = personService.findAllUsers();
         model.addAttribute("users", users);
         return "users";
-    }
+    }*/
 
 
 }
