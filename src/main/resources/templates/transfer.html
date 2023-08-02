@@ -15,7 +15,7 @@
 
     <div th:if="${param.successAddConnection}">
         <div class="alert alert-info">
-            congratulations you have a new friend !
+            Congratulations you have a new friend !
         </div>
     </div>
 
@@ -107,7 +107,7 @@
                                 placeholder=" 0€"
                                 th:field="*{amount}"
                                 step=".01"
-                                id="amount" required>  <!-- value=?   min=? -->
+                                id="amount" required>
                     </div>
                     <div class="col-md-4">
                         <input
@@ -202,6 +202,7 @@
       function closeForm() {
         document.getElementById("popupForm").style.display = "none";
       }
+
 
 
 

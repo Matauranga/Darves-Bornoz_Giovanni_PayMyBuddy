@@ -1,14 +1,10 @@
 package com.giovanniOpenclassrooms.paymybuddy.controller;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
-import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
 import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
-import com.giovanniOpenclassrooms.paymybuddy.business.TransactionService;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
-import com.giovanniOpenclassrooms.paymybuddy.DTO.TransferDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,39 +19,42 @@ public class LoginController {
 
     @Autowired
     private PersonService personService;
-    @Autowired
-    private TransactionService transactionService;
 
 
-    @GetMapping("/transfer")
-    public String transfer(Authentication authentication, Model model) {
-        model.addAttribute("transferDTO", new TransferDTO());
-
-        Person person = personService.getPersonByEmail(authentication.getName());
-        model.addAttribute("connections", person.getConnectionsList());
-        model.addAttribute("transactionsList", transactionService.getTransactionsByUser(person));
-        return "transfer";
-    }
-
-
-    // handler method to handle login request
+    /**
+     * Handler method to handle login request
+     *
+     * @return the login page
+     */
     @GetMapping({"/", "/login"})
     public String login() {
         return "login";
     }
 
 
-    // handler method to handle user registration form request
+    /**
+     * Handler method to handle person registration form request
+     *
+     * @param model
+     * @return the sign-up page
+     */
     @GetMapping("/signUp")
     public String showRegistrationForm(Model model) {
-        // create model object to store form data
 
+        // create model object to store form data
         model.addAttribute("person", new RegisterPersonDTO());
         return "signUp";
     }
 
 
-    // handler method to handle user registration form submit request
+    /**
+     * Handler method to handle person registration form submit request
+     *
+     * @param registerPersonDTO the information from request to register a person
+     * @param result
+     * @param model
+     * @return the sign-up page
+     */
     @PostMapping("/signUp/save")
     public String registration(@Valid @ModelAttribute("person") RegisterPersonDTO registerPersonDTO, BindingResult result, Model model) {
 
@@ -74,32 +73,5 @@ public class LoginController {
         personService.saveNewPersonFromDTO(registerPersonDTO);
         return "redirect:/signUp?success";
     }
-
-
-    @PostMapping("/transfer/addFriend")
-    public String addFriend(Authentication authentication, String friendEmail) {
-
-        personService.addConnection(
-                personService.getPersonByEmail(authentication.getName()),
-                personService.getPersonByEmail(friendEmail)
-        );
-        return "redirect:/transfer?successAddConnection";
-    }
-
-
-    @PostMapping("/transfer/transfer-request")
-    public String sendMoney(Authentication authentication, @ModelAttribute("transferDTO") TransferDTO transferDTO) {
-
-        Person debtor = personService.getPersonByEmail(authentication.getName());
-        Person creditor = personService.getPersonByEmail(transferDTO.getCreditorEmail());
-        BigDecimal amount = transferDTO.getAmount();
-        String description = transferDTO.getDescription();
-
-        transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
-
-        return "redirect:/transfer?successTransfer";
-
-    }
-
 
 }

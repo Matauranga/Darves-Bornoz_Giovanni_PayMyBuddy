@@ -33,11 +33,11 @@ public class Person {
 
     private LocalDate birthdate;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     @NotBlank
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     @NotBlank
     private String password;
 

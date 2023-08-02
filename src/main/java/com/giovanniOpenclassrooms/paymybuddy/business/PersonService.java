@@ -3,11 +3,12 @@ package com.giovanniOpenclassrooms.paymybuddy.business;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface PersonService {
-    Iterable<Person> getAllPersons();
+    List<Person> getAllPersons();
 
     Optional<Person> getPersonById(UUID id);
 

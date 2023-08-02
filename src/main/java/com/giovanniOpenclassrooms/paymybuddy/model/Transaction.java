@@ -30,13 +30,12 @@ public class Transaction {
     @JoinColumn(name = "creditor")
     private Person creditor;
 
-    @Column(name = "transferAmount")
+    @Column(name = "transfer_amount")
     private BigDecimal transferAmount;
 
-    @Column(name = "operationDate")
+    @Column(name = "operation_date")
     private LocalDateTime operationDate;
 
-    @Column(name = "description")
     private String description;
 
 

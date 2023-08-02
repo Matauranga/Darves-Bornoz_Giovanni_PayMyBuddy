@@ -4,15 +4,16 @@ import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TransactionService {
 
-    public Iterable<Transaction> getAllTransactions();
+    public List<Transaction> getAllTransactions();
 
     public Optional<Transaction> getTransactionById(Integer idTransaction);
 
-    public Iterable<Transaction> getTransactionsByUser(Person person);
+    public List<Transaction> getTransactionsByUser(Person person);
 
     public void transferElectronicMoney(TransactionDTO transactionDTO);
 
