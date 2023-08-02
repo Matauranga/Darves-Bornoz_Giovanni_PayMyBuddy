@@ -34,8 +34,8 @@ public class TransactionServiceImpl implements TransactionService {
     public Iterable<Transaction> getTransactionsByUser(Person person) {
 
         return ((List<Transaction>) getAllTransactions()).stream()
-                .filter(transaction -> person.getPersonId().equals(transaction.getDebtors().getPersonId())
-                        || person.getPersonId().equals(transaction.getCreditors().getPersonId()))
+                .filter(transaction -> person.getPersonId().equals(transaction.getDebtor().getPersonId())
+                        || person.getPersonId().equals(transaction.getCreditor().getPersonId()))
                 .toList();
     }
 
@@ -53,7 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
         var creditor = getUserOrElseThrow(transactionDTO.creditorId())
                 .creditBalance(amount);
 
-        var transaction = new Transaction(debtor.getPersonId(), creditor.getPersonId(), amount, transactionDTO.message());
+        var transaction = new Transaction(debtor.getPersonId(), creditor.getPersonId(), amount, transactionDTO.description());
 
         this.personRepository.saveAll(List.of(creditor, debtor));
         this.transactionRepository.save(transaction);

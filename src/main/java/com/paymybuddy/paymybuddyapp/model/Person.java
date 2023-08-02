@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,14 +35,16 @@ public class Person {
 
     private LocalDate birthdate;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
+    @NotBlank
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
+    @NotBlank
     private String password;
 
-    @Column(name = "amount_balance")
-    private BigDecimal amountBalance;
+    @Column(name = "amount_balance", nullable = false)
+    private BigDecimal amountBalance = BigDecimal.ZERO;
 
     @JoinTable(name = "person_friends", joinColumns = {
             @JoinColumn(name = "owner", referencedColumnName = "person_id", nullable = false)
@@ -55,8 +58,6 @@ public class Person {
      * @param amount
      * @return
      */
-
-
     public Person creditBalance(BigDecimal amount) {
         amountBalance = amountBalance.add(amount);
         return this;

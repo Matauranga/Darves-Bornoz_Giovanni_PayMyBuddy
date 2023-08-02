@@ -55,16 +55,23 @@ public class PersonServiceImpl implements PersonService {
 
 
     public void addConnection(Person person, Person friend) {
+
         person.getConnectionsList().add(friend);
+        savePerson(person);
     }
 
 
     public void removeConnection(Person person, Person friendToDelete) {
         person.getConnectionsList().remove(friendToDelete);
+        savePerson(person);
     }
 
 
-    public void saveUser(RegisterPersonDTO registerPersonDTO) {
+    public void saveNewPersonFromDTO(RegisterPersonDTO registerPersonDTO) {
+        // check if user exists, or throw exception
+        if (personRepository.existsByEmail(registerPersonDTO.getEmail())) {
+            throw new RuntimeException("CONFLICT - email exists");
+        }
         Person person = new Person();
         person.setFirstname(registerPersonDTO.getFirstName());
         person.setLastname(registerPersonDTO.getLastName());
@@ -74,12 +81,13 @@ public class PersonServiceImpl implements PersonService {
         // encrypt the password using spring security
         person.setPassword(passwordEncoder.encode(registerPersonDTO.getPassword()));
 
-        personRepository.save(person);
+        savePerson(person);
     }
 
 
-    public Person findUserByEmail(String email) {
+    public Person getPersonByEmail(String email) {
         return personRepository.findByEmail(email);
     }
+
 
 }

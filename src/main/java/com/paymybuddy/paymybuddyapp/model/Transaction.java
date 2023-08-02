@@ -23,12 +23,12 @@ public class Transaction {
     private Integer transactionId;
 
     @ManyToOne
-    @JoinColumn(name = "debtors")
-    private Person debtors;
+    @JoinColumn(name = "debtor")
+    private Person debtor;
 
     @ManyToOne
-    @JoinColumn(name = "creditors")
-    private Person creditors;
+    @JoinColumn(name = "creditor")
+    private Person creditor;
 
     @Column(name = "transferAmount")
     private BigDecimal transferAmount;
@@ -44,11 +44,11 @@ public class Transaction {
 
         var userTransmitter = new Person();
         userTransmitter.setPersonId(debtors);
-        this.debtors = userTransmitter;
+        this.debtor = userTransmitter;
 
         var userBeneficiary = new Person();
         userBeneficiary.setPersonId(creditors);
-        this.creditors = userBeneficiary;
+        this.creditor = userBeneficiary;
 
         this.transferAmount = transferAmount;
         this.operationDate = LocalDateTime.now();

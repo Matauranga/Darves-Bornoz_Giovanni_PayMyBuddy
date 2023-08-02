@@ -7,6 +7,7 @@ public record TransactionDTO(
         UUID debtorId,
         UUID creditorId,
         BigDecimal amount,
-        String message
+        String description
 ) {
+
 }

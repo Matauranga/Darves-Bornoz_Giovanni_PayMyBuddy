@@ -1,11 +1,13 @@
-package com.paymybuddy.paymybuddyapp.security;
+package com.paymybuddy.paymybuddyapp.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,40 +23,37 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    //TODO : Franck comment ça marche ?
+    @Bean
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
+    //TODO : Franck importance de "index.html"
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { //TODO penser avant de rendre le projet à verifier si possible de changer les methods depreciate
-        http.csrf().disable()
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/signUp/**").permitAll()
-                                .requestMatchers("/index").permitAll()
-                                .requestMatchers("/users").permitAll()
-                                .requestMatchers(toH2Console())
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-                ).formLogin(
-                        form -> form //TODO : Franck l'ordre est'il important ici ou au dessus par ex ? et si oui comment on le pense ?
+                        authorize.requestMatchers("/signUp/**", "/transfer/**").permitAll()
+                                .requestMatchers(toH2Console()).permitAll()
+                                .anyRequest().authenticated()
+                )
+                .formLogin(
+                        form -> form
                                 .loginPage("/login")
                                 .usernameParameter("email")
+                                .passwordParameter("password")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/index")
+                                .defaultSuccessUrl("/transfer")
                                 .permitAll()
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                                 .permitAll()
-                ).headers()
-                .frameOptions()
-                .disable();
+                )
+                .headers(headers -> headers.frameOptions().disable()); //TODO frameoption
 
         return http.build();
-    }
-
-    //TODO : Franck comment ça marche ?
-    @Bean
-    public static PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Autowired
@@ -63,4 +62,5 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
+
 }
