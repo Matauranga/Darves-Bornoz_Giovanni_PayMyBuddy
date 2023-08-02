@@ -1,4 +1,4 @@
-package com.paymybuddy.paymybuddyapp.config;
+package com.giovanniOpenclassrooms.paymybuddy.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

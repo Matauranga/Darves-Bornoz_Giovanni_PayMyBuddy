@@ -1,7 +1,7 @@
-package com.paymybuddy.paymybuddyapp.business;
+package com.giovanniOpenclassrooms.paymybuddy.business;
 
-import com.paymybuddy.paymybuddyapp.DTO.RegisterPersonDTO;
-import com.paymybuddy.paymybuddyapp.model.Person;
+import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
+import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 
 import java.util.Optional;
 import java.util.UUID;

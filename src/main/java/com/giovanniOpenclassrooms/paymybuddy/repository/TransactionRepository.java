@@ -1,6 +1,6 @@
-package com.paymybuddy.paymybuddyapp.repository;
+package com.giovanniOpenclassrooms.paymybuddy.repository;
 
-import com.paymybuddy.paymybuddyapp.model.Transaction;
+import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

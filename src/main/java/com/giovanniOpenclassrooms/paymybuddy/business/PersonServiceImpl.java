@@ -1,8 +1,8 @@
-package com.paymybuddy.paymybuddyapp.business;
+package com.giovanniOpenclassrooms.paymybuddy.business;
 
-import com.paymybuddy.paymybuddyapp.DTO.RegisterPersonDTO;
-import com.paymybuddy.paymybuddyapp.model.Person;
-import com.paymybuddy.paymybuddyapp.repository.PersonRepository;
+import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
+import com.giovanniOpenclassrooms.paymybuddy.model.Person;
+import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,11 @@
-package com.paymybuddy.paymybuddyapp.controller;
+package com.giovanniOpenclassrooms.paymybuddy.controller;
 
-import com.paymybuddy.paymybuddyapp.DTO.RegisterPersonDTO;
-import com.paymybuddy.paymybuddyapp.DTO.TransactionDTO;
-import com.paymybuddy.paymybuddyapp.DTO.TransferDTO;
-import com.paymybuddy.paymybuddyapp.business.PersonService;
-import com.paymybuddy.paymybuddyapp.business.TransactionService;
-import com.paymybuddy.paymybuddyapp.model.Person;
-import com.paymybuddy.paymybuddyapp.model.Transaction;
+import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
+import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
+import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
+import com.giovanniOpenclassrooms.paymybuddy.business.TransactionService;
+import com.giovanniOpenclassrooms.paymybuddy.model.Person;
+import com.giovanniOpenclassrooms.paymybuddy.DTO.TransferDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

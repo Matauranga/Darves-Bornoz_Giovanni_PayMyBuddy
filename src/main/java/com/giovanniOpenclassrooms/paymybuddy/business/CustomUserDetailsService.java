@@ -1,7 +1,7 @@
-package com.paymybuddy.paymybuddyapp.business;
+package com.giovanniOpenclassrooms.paymybuddy.business;
 
-import com.paymybuddy.paymybuddyapp.model.Person;
-import com.paymybuddy.paymybuddyapp.repository.PersonRepository;
+import com.giovanniOpenclassrooms.paymybuddy.model.Person;
+import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

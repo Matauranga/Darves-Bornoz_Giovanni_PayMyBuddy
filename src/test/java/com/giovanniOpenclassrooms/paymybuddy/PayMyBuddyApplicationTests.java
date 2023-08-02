@@ -1,10 +1,10 @@
-package com.paymybuddy.paymybuddyapp;
+package com.giovanniOpenclassrooms.paymybuddy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PaymybuddyappApplicationTests {
+class PayMyBuddyApplicationTests {
 
 	@Test
 	void contextLoads() {

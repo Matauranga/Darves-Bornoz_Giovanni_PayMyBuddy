@@ -1,8 +1,8 @@
-package com.paymybuddy.paymybuddyapp.business;
+package com.giovanniOpenclassrooms.paymybuddy.business;
 
-import com.paymybuddy.paymybuddyapp.DTO.TransactionDTO;
-import com.paymybuddy.paymybuddyapp.model.Person;
-import com.paymybuddy.paymybuddyapp.model.Transaction;
+import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
+import com.giovanniOpenclassrooms.paymybuddy.model.Person;
+import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 
 import java.util.Optional;
 

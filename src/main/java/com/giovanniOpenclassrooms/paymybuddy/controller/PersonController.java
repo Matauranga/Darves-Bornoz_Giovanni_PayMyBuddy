@@ -1,4 +1,4 @@
-package com.paymybuddy.paymybuddyapp.controller;
+package com.giovanniOpenclassrooms.paymybuddy.controller;
 /*
 import com.paymybuddy.paymybuddyapp.business.PersonService;
 import com.paymybuddy.paymybuddyapp.model.Person;

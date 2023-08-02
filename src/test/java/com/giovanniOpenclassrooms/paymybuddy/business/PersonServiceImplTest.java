@@ -1,21 +1,11 @@
-package com.paymybuddy.paymybuddyapp.business;
+package com.giovanniOpenclassrooms.paymybuddy.business;
 
-import com.paymybuddy.paymybuddyapp.model.Person;
-import com.paymybuddy.paymybuddyapp.repository.PersonRepository;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class PersonServiceImplTest {

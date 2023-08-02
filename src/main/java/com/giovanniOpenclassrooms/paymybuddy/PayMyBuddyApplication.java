@@ -1,12 +1,12 @@
-package com.paymybuddy.paymybuddyapp;
+package com.giovanniOpenclassrooms.paymybuddy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PaymybuddyappApplication {
+public class PayMyBuddyApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PaymybuddyappApplication.class, args);
+        SpringApplication.run(PayMyBuddyApplication.class, args);
     }
 }

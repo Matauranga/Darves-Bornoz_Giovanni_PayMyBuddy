@@ -1,4 +1,4 @@
-package com.paymybuddy.paymybuddyapp.business;
+package com.giovanniOpenclassrooms.paymybuddy.business;
 
 import org.junit.jupiter.api.Test;
 

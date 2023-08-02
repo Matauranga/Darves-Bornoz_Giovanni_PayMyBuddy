@@ -1,4 +1,4 @@
-package com.paymybuddy.paymybuddyapp.DTO;
+package com.giovanniOpenclassrooms.paymybuddy.DTO;
 
 
 import jakarta.validation.constraints.Email;

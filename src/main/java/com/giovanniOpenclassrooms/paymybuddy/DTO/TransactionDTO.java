@@ -1,4 +1,4 @@
-package com.paymybuddy.paymybuddyapp.DTO;
+package com.giovanniOpenclassrooms.paymybuddy.DTO;
 
 import java.math.BigDecimal;
 import java.util.UUID;
