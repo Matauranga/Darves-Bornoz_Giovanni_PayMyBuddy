@@ -21,7 +21,7 @@ public class PersonController {
 
     @GetMapping("/pmbTransfer")
     public String viewApplication(Model model) {
-        model.addAttribute("message", "Hi ");
+        model.addAttribute("description", "Hi ");
         return "pmbTransfer";
     }
 

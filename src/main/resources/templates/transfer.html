@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Pay My Buddy</title>
+
+</head>
+
+<body>
+
+<div style="margin: 30px 15%;">
+
+    <div th:if="${param.successAddConnection}">
+        <div class="alert alert-info">
+            congratulations you have a new friend !
+        </div>
+    </div>
+
+    <div th:if="${param.successTransfer}">
+        <div class="alert alert-info">
+            congratulations you have lost money !
+        </div>
+    </div>
+
+    <!-- Ajout connection -->
+    <div class="open-btn bg-light clearfix">
+        <h5 class="text-left">Send Money
+            <button type="button" class="open-button btn btn-primary float-end" onclick="openForm()">
+                Add Connection
+            </button>
+        </h5>
+    </div>
+    <div id="login-popup">
+        <div class="form-popup"
+             id="popupForm"
+             style=" display: none;
+                     position: fixed;
+                     left: 45%;
+                     top: 5%;
+                     transform: translate(-45%, 5%);
+                     border: 2px solid #666;
+                     z-index: 9;"
+        >
+
+            <form class="form-container"
+                  th:action="@{/transfer/addFriend}"
+                  method="POST"
+                  style=" max-width: 300px;
+                          padding: 20px;
+                          background-color: #fff;"
+            >
+                <h2>Add connection</h2>
+                <input
+                        type="email"
+                        class="form-control"
+                        name="friendEmail"
+                        placeholder="Add connection (Ex: mail@mail.com)"
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                        id="friendEmail" required
+                >
+                <button type="submit" class="btn btn-primary" value="saveConnection">Save</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Fermer</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Preparation de transfert + submit-->
+
+    <div class="">
+
+        <div style="display: block;background-color: #eeeeee;margin-top: 3em;padding:1em;">
+
+            <form
+                    method="POST"
+                    class="form-group"
+                    th:action="@{/transfer/transfer-request}"
+                    th:object="${transferDTO}"
+
+            >
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <select
+                                class="custom-select"
+                                name="connection"
+                                th:field="*{creditorEmail}"
+                                id="connection" required
+                        >
+                            <option value="" selected disabled hidden>Select A Connection</option>
+                            <option
+                                    th:each="friend : ${connections}"
+                                    th:value="${friend.getEmail()}"
+                                    th:text="${friend.getEmail()}"
+                            >
+                            </option>
+                        </select>
+
+                    </div>
+                    <div class="col-md-2">
+                        <input
+                                type="number"
+                                class="form-control"
+                                name="amount"
+                                placeholder=" 0€"
+                                th:field="*{amount}"
+                                step=".01"
+                                id="amount" required>  <!-- value=?   min=? -->
+                    </div>
+                    <div class="col-md-4">
+                        <input
+
+                                type="text"
+                                class="form-control"
+                                name="description"
+                                placeholder="Description"
+                                th:field="*{description}"
+                                id="description">
+                    </div>
+                    <div class="col-md-2">
+                        <button
+                                type="submit"
+                                class="btn btn-success"
+                                name="transfer"
+                                value="Transfer"
+                        >
+                            Pay
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+
+        <!-- <div th:replace="~{/navbar::topbar}"></div> -->
+
+        <!-- block sur historique de transfert -->
+
+        <div class="container main-container">
+            <div class="table-responsive">
+                <table
+                        class="table table-striped table-hover mt-3"
+                        id="transactionTable">
+                    <thead>
+                    <tr class="bg-success text-white">
+                        <th>Connection</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="transaction: ${transactionsList}">
+                        <td th:text="${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()}"></td>
+                        <td th:text="${transaction.getDescription()}"></td>
+                        <td th:text="${transaction.getTransferAmount()+'€'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!--
+                                <div
+                                        class="list-inline text-xl-center mb-3 mt-3 blockquote"
+                                        style="padding-right: 6rem;"
+                                >
+                                    <div
+                                            th:if="${transactionList.totalPages > 0}"
+                                            class="list-inline-item p-0"
+                                            th:each="pageNumber : ${pageNumbers}"
+                                    >
+                                        <ul>
+                                            <ol>
+                                                <a
+                                                        th:href="@{/transfer(size=${transactionList.size}, page=${pageNumber})}"
+                                                        th:text=${pageNumber}
+                                                        th:class="${pageNumber==transactionList.number + 1} ? active">
+                                                </a>
+                                            </ol>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                 -->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+
+      function openForm() {
+        document.getElementById("popupForm").style.display = "block";
+      }
+
+      function closeForm() {
+        document.getElementById("popupForm").style.display = "none";
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
