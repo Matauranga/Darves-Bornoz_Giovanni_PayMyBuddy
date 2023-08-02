@@ -90,12 +90,12 @@ public class LoginController {
     @PostMapping("/transfer/transfer-request")
     public String sendMoney(Authentication authentication, @ModelAttribute("transferDTO") TransferDTO transferDTO) {
 
-        Person debitor = personService.getPersonByEmail(authentication.getName());
+        Person debtor = personService.getPersonByEmail(authentication.getName());
         Person creditor = personService.getPersonByEmail(transferDTO.getCreditorEmail());
         BigDecimal amount = transferDTO.getAmount();
         String description = transferDTO.getDescription();
 
-        transactionService.transferElectronicMoney(new TransactionDTO(debitor.getPersonId(), creditor.getPersonId(), amount, description));
+        transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
 
         return "redirect:/transfer?successTransfer";
 

@@ -29,16 +29,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         return new User
-                    (
-                            person.getEmail(),
-                            person.getPassword(),
-                            getAuthorities()
-                    );
+                (
+                        person.getEmail(),
+                        person.getPassword(),
+                        getAuthorities()
+                );
 
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new HashSet<GrantedAuthority>();
+        return new HashSet<>();
     }
 
 }
