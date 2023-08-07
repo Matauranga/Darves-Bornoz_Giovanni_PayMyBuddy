@@ -1,6 +1,7 @@
 package com.giovanniOpenclassrooms.paymybuddy.business;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.NotFoundException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
@@ -89,7 +90,7 @@ public class TransactionServiceImpl implements TransactionService {
     private Person getPersonOrElseThrow(UUID id) {
         return this.personRepository
                 .findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(Person.class, "Person not found"));
     }
 
 }

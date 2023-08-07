@@ -15,15 +15,23 @@
 
     <div th:if="${param.successAddConnection}">
         <div class="alert alert-info">
-            Congratulations you have a new friend !
+            Congrats you have a new friend !
+        </div>
+    </div>
+
+    <div th:if="${param.failedAddConnection}">
+        <div class="alert alert-danger">
+            An error occurred, your friend is not registered !
+            Verify the email.
         </div>
     </div>
 
     <div th:if="${param.successTransfer}">
         <div class="alert alert-info">
-            congratulations you have lost money !
+            Congrats you have lost money !
         </div>
     </div>
+
 
     <!-- Ajout connection -->
     <div class="open-btn bg-light clearfix">
@@ -202,6 +210,14 @@
       function closeForm() {
         document.getElementById("popupForm").style.display = "none";
       }
+
+
+
+
+
+
+
+
 
 
 

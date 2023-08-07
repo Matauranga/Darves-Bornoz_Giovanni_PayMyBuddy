@@ -2,6 +2,8 @@ package com.giovanniOpenclassrooms.paymybuddy.business;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.UpdatePersonDTO;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.NotFoundException;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.PersonAlreadyExistsException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +65,12 @@ public class PersonServiceImpl implements PersonService {
     /**
      * Method to update person in database
      *
-     * @param id     the id of ther person we wants modify
+     * @param id     the id of the person we wants modify
      * @param person information to modify return by the front in a DTO
      */
-    public void updatePerson(UUID id, UpdatePersonDTO person) {//TODO : a faire
+    public void updatePerson(UUID id, UpdatePersonDTO person) {//TODO : à peaufiner
         Person personToUpdate = this.personRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(Person.class, "Person don't exist")); //TODO : Pk pas couvert quand execute all tests
 
         personToUpdate.setFirstname(person.firstname());
         personToUpdate.setLastname(person.lastname());
@@ -92,10 +94,11 @@ public class PersonServiceImpl implements PersonService {
      * @param person the person who add connection
      * @param friend the person to connect to
      */
-    public void addConnection(Person person, Person friend) {
-
-        person.getConnectionsList().add(friend);
-        savePerson(person);
+    public void addConnection(Person person, Person friend) {// TODO : vérifier si la personne est déjà dans la liste d'amis et renvoyer info dans front
+        if (!person.getConnectionsList().contains(friend)) {
+            person.getConnectionsList().add(friend);
+            savePerson(person);
+        }
     }
 
     /**
@@ -117,8 +120,8 @@ public class PersonServiceImpl implements PersonService {
     public void saveNewPersonFromDTO(RegisterPersonDTO registerPersonDTO) {
         // check if user exists, or throw exception
         if (personRepository.existsByEmail(registerPersonDTO.getEmail())) {
-            throw new RuntimeException("CONFLICT - email exists");
-        }
+            throw new PersonAlreadyExistsException(Person.class, "CONFLICT - email exists");
+        } //TODO : interest ??? car géré dans controller
         Person person = new Person();
         person.setFirstname(registerPersonDTO.getFirstName());
         person.setLastname(registerPersonDTO.getLastName());

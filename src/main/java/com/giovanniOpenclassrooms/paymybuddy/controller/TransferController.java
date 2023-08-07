@@ -5,6 +5,7 @@ import com.giovanniOpenclassrooms.paymybuddy.DTO.TransferDTO;
 import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
 import com.giovanniOpenclassrooms.paymybuddy.business.TransactionService;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
+import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,10 @@ public class TransferController {
 
     @Autowired
     private PersonService personService;
+
+
+    @Autowired
+    private PersonRepository personRepository;
 
 
     /**
@@ -50,12 +55,16 @@ public class TransferController {
      */
     @PostMapping("/transfer/addFriend")
     public String addFriend(Authentication authentication, String friendEmail) {
+        //TODO : Ai-je le droit ?
+        if (personRepository.existsByEmail(friendEmail) && !authentication.getName().equals(friendEmail)) {
+            personService.addConnection(
+                    personService.getPersonByEmail(authentication.getName()),
+                    personService.getPersonByEmail(friendEmail)
+            );
+            return "redirect:/transfer?successAddConnection";
+        }
 
-        personService.addConnection(
-                personService.getPersonByEmail(authentication.getName()),
-                personService.getPersonByEmail(friendEmail)
-        );
-        return "redirect:/transfer?successAddConnection";
+        return "redirect:/transfer?failedAddConnection";
     }
 
 
@@ -77,7 +86,6 @@ public class TransferController {
         transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
 
         return "redirect:/transfer?successTransfer";
-
     }
 
 

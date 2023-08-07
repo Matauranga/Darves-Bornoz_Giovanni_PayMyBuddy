@@ -1,5 +1,6 @@
 package com.giovanniOpenclassrooms.paymybuddy.model;
 
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -64,13 +65,11 @@ public class Person {
     public Person debitBalance(BigDecimal amount) {
 
         if (amountBalance.subtract(amount).doubleValue() < 0) {
-            throw new RuntimeException("t'as pas de fric gros");
+            throw new NegativeBalanceAccount("t'as pas de fric gros");
         }
 
         amountBalance = amountBalance.subtract(amount);
         return this;
-
-
     }
 
     public Person(String firstname, String lastname, String email, String password, BigDecimal amountBalance) {
