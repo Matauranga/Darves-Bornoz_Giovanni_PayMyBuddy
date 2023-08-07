@@ -34,11 +34,11 @@ public class TransactionServiceImpl implements TransactionService {
     /**
      * Method that give a transaction by his id
      *
-     * @param id of the desired transaction
+     * @param transactionId of the desired transaction
      * @return the desired transaction with all infos in database
      */
-    public Optional<Transaction> getTransactionById(Integer id) {
-        return transactionRepository.findById(id);
+    public Optional<Transaction> getTransactionById(UUID transactionId) {
+        return transactionRepository.findById(transactionId);
     }
 
     /**
@@ -48,7 +48,7 @@ public class TransactionServiceImpl implements TransactionService {
      * @return a List of all transfer where he person is involved (if change --> a List of all transfer where he person is involved like debtor)
      */
     @Override
-    public List<Transaction> getTransactionsByUser(Person person) {//TODO : tout les transfers ou juste la premiere partie ?
+    public List<Transaction> getTransactionsByPerson(Person person) {//TODO : tout les transfers ou juste la premiere partie ?
 
         return getAllTransactions().stream()
                 .filter(transaction -> person.getPersonId().equals(transaction.getDebtor().getPersonId())

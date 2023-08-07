@@ -36,7 +36,7 @@ public class TransferController {
 
         Person person = personService.getPersonByEmail(authentication.getName());
         model.addAttribute("connections", person.getConnectionsList());
-        model.addAttribute("transactionsList", transactionService.getTransactionsByUser(person));
+        model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
         return "transfer";
     }
 

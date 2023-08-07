@@ -18,9 +18,9 @@ import java.util.UUID;
 @Table(name = "transaction")
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "transaction_id")
-    private Integer transactionId;
+    private UUID transactionId;
 
     @ManyToOne
     @JoinColumn(name = "debtor")

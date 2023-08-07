@@ -6,14 +6,15 @@ import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface TransactionService {
 
     public List<Transaction> getAllTransactions();
 
-    public Optional<Transaction> getTransactionById(Integer idTransaction);
+    public Optional<Transaction> getTransactionById(UUID transactionId);
 
-    public List<Transaction> getTransactionsByUser(Person person);
+    public List<Transaction> getTransactionsByPerson(Person person);
 
     public void transferElectronicMoney(TransactionDTO transactionDTO);
 
