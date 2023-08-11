@@ -30,6 +30,12 @@
             <a class="btn btn-lg btn-success" href="login.html">Pay My Buddy</a>
         </div>
 
+        <div th:if="${errorMessage}">
+            <div class="alert alert-danger">
+                <td th:text="${errorMessage}"></td>
+            </div>
+        </div>
+
 
         <!-- Personal information -->
         <div class="my-4">

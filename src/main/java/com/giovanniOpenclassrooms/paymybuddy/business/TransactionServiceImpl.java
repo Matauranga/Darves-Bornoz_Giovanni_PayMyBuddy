@@ -91,7 +91,7 @@ public class TransactionServiceImpl implements TransactionService {
     private Person getPersonOrElseThrow(UUID id) {
         return this.personRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(Person.class, "Person not found"));
+                .orElseThrow(() -> new NotFoundException("Person not found"));
     }
 
 }

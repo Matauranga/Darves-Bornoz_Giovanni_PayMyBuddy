@@ -70,7 +70,7 @@ public class PersonServiceImpl implements PersonService {
      */
     public void updatePerson(UUID id, UpdatePersonDTO person) {//TODO : à peaufiner
         Person personToUpdate = this.personRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(Person.class, "Person don't exist")); //TODO : Pk pas couvert quand execute all tests
+                .orElseThrow(() -> new NotFoundException("Person don't exist")); //TODO : Pk pas couvert quand execute all tests
 
         personToUpdate.setFirstname(person.firstname());
         personToUpdate.setLastname(person.lastname());
@@ -121,7 +121,7 @@ public class PersonServiceImpl implements PersonService {
 
         // check if user exists, or throw exception
         if (personRepository.existsByEmail(registerPersonDTO.getEmail())) {
-            throw new PersonAlreadyExistsException(Person.class, "CONFLICT - email exists");
+            throw new PersonAlreadyExistsException("CONFLICT - email exists");
         }
         Person person = new Person();
         person.setFirstname(registerPersonDTO.getFirstName());
