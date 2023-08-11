@@ -2,7 +2,6 @@ package com.giovanniOpenclassrooms.paymybuddy.controller;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
-import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,19 +55,18 @@ public class LoginController {
     @PostMapping("/signUp/save")
     public String registration(@Valid @ModelAttribute("person") RegisterPersonDTO registerPersonDTO, BindingResult result, Model model) {
 
-        Person existingPerson = personService.getPersonByEmail(registerPersonDTO.getEmail());
-
-        if (existingPerson != null && existingPerson.getEmail() != null && !existingPerson.getEmail().isEmpty()) {
-            result.rejectValue("email", null,
-                    "There is already an account registered with the same email");
-        }
-
         if (result.hasErrors()) {
             model.addAttribute("person", registerPersonDTO);
             return "/signUp";
         }
 
-        personService.saveNewPersonFromDTO(registerPersonDTO);
+        try {
+            personService.saveNewPersonFromDTO(registerPersonDTO);
+        } catch (Exception exception) {
+            model.addAttribute("errorMessage", exception.getMessage());
+            return "/signUp";
+        }
+
         return "redirect:/signUp?success";
     }
 

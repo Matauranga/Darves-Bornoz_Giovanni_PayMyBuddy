@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -65,15 +66,15 @@ public class TransactionServiceImpl implements TransactionService {
      */
     public void transferElectronicMoney(TransactionDTO transactionDTO) {
 
-        var amount = transactionDTO.amount();
+        final BigDecimal amount = transactionDTO.amount();
 
-        var debtor = getPersonOrElseThrow(transactionDTO.debtorId())
+        final Person debtor = getPersonOrElseThrow(transactionDTO.debtorId())
                 .debitBalance(amount);
 
-        var creditor = getPersonOrElseThrow(transactionDTO.creditorId())
+        final Person creditor = getPersonOrElseThrow(transactionDTO.creditorId())
                 .creditBalance(amount);
 
-        var transaction = new Transaction(debtor.getPersonId(), creditor.getPersonId(), amount, transactionDTO.description());
+        final var transaction = new Transaction(debtor.getPersonId(), creditor.getPersonId(), amount, transactionDTO.description());
 
         this.personRepository.saveAll(List.of(creditor, debtor));
         this.transactionRepository.save(transaction);

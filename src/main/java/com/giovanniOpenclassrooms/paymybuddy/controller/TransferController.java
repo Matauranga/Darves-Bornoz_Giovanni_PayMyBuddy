@@ -55,7 +55,6 @@ public class TransferController {
      */
     @PostMapping("/transfer/addFriend")
     public String addFriend(Authentication authentication, String friendEmail) {
-        //TODO : Ai-je le droit ?
         if (personRepository.existsByEmail(friendEmail) && !authentication.getName().equals(friendEmail)) {
             personService.addConnection(
                     personService.getPersonByEmail(authentication.getName()),
@@ -87,6 +86,5 @@ public class TransferController {
 
         return "redirect:/transfer?successTransfer";
     }
-
 
 }

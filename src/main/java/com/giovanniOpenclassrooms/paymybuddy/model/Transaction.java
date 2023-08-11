@@ -54,5 +54,4 @@ public class Transaction {
         this.description = description;
     }
 
-
 }

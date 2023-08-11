@@ -118,10 +118,11 @@ public class PersonServiceImpl implements PersonService {
      * @param registerPersonDTO information from the front to register the person
      */
     public void saveNewPersonFromDTO(RegisterPersonDTO registerPersonDTO) {
+
         // check if user exists, or throw exception
         if (personRepository.existsByEmail(registerPersonDTO.getEmail())) {
             throw new PersonAlreadyExistsException(Person.class, "CONFLICT - email exists");
-        } //TODO : interest ??? car géré dans controller
+        }
         Person person = new Person();
         person.setFirstname(registerPersonDTO.getFirstName());
         person.setLastname(registerPersonDTO.getLastName());
