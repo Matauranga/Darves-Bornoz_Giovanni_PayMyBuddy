@@ -6,6 +6,7 @@ import com.giovanniOpenclassrooms.paymybuddy.exceptions.NotFoundException;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.PersonAlreadyExistsException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
+import com.giovanniOpenclassrooms.paymybuddy.utils.PersonFaker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,12 +14,9 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -38,9 +36,7 @@ public class PersonServiceImplTest {
     @Test
     void getAllUsers() {
         //Given an initial list of persons
-        Person person1 = new Person();
-        Person person2 = new Person();
-        List<Person> persons = List.of(person1, person2);
+        List<Person> persons = List.of(PersonFaker.generate(), PersonFaker.generate());
 
         //When we try to get all persons
         when(personRepository.findAll()).thenReturn(persons);
@@ -56,12 +52,11 @@ public class PersonServiceImplTest {
     @Test
     void getPersonById() {
         //Given an initial person with an id
-        UUID uuidPerson = UUID.fromString("c076de71-b095-4e98-a58d-3e0ec3199daf");
-        Person person = new Person(uuidPerson, "Bgio", "Adar", LocalDate.of(2012, 10, 2), "g2@mail.fr", "$2a$10$ZSC9aOm3As6cyO4EvhBLwO4CkUv6QSOONxF4hJ0oYuSkbBV8ldoW.", new BigDecimal("100.00"), newArrayList());
+        Person person = PersonFaker.generate();
 
         //When we try to get this person
         when(personRepository.findById(any())).thenReturn(Optional.of(person));
-        Optional<Person> response = personServiceImpl.getPersonById(uuidPerson);
+        Optional<Person> response = personServiceImpl.getPersonById(person.getPersonId());
 
         //Then we verify if we have the good person and if all works correctly
         assertThat(response).isNotEmpty().contains(person);
@@ -74,7 +69,8 @@ public class PersonServiceImplTest {
     void getPersonByEmail() {
         //Given an initial person to find
         String emailPersonToFind = "g@mail.fr";
-        Person person = new Person("Gio", "Dar", emailPersonToFind, "$2a$10$ZSC9aOm3As6cyO4EvhBLwO4CkUv6QSOONxF4hJ0oYuSkbBV8ldoW.", new BigDecimal("100.00"));
+        Person person = PersonFaker.generate();
+        person.setEmail(emailPersonToFind);
 
         //When we search the person by his id
         when(personRepository.findByEmail(any())).thenReturn(person);
@@ -90,7 +86,7 @@ public class PersonServiceImplTest {
     @Test
     void savePerson() {
         //Given a person to save
-        Person personToAdd = new Person("Baba", "AuRhum", "dessert@email.fr", "baba", new BigDecimal("1.0"));
+        Person personToAdd = PersonFaker.generate();
 
         //When we save the person
         personServiceImpl.savePerson(personToAdd);
@@ -104,16 +100,16 @@ public class PersonServiceImplTest {
     @Test
     void updatePerson() {//TODO a modifier quant la fonction update sera modifié
         //Given an initial person to modify
-        UUID uuidPerson = UUID.fromString("c076de71-b095-4e98-a58d-3e0ec3199daf");
+        Person person = PersonFaker.generate();
+        UUID uuidPerson = UUID.randomUUID();
         String newEmail = "noiretrouge@email.com";
+        person.setPersonId(uuidPerson);
 
-        Person person = new Person(uuidPerson, "gio", "Adar", null, "g2@mail.fr", null, null, null);
-
-        UpdatePersonDTO personTomodify = new UpdatePersonDTO("gio", "Adar", newEmail);
+        UpdatePersonDTO personToModify = new UpdatePersonDTO("gio", "Adar", newEmail);
 
         //When we try to update the person
         when(personRepository.findById(any())).thenReturn(Optional.of(person));
-        personServiceImpl.updatePerson(uuidPerson, personTomodify);
+        personServiceImpl.updatePerson(uuidPerson, personToModify);
 
         //Then we verify if this have works correctly
         assertThat(person.getEmail()).isEqualTo(newEmail);
@@ -126,18 +122,16 @@ public class PersonServiceImplTest {
     @Test
     void updatePersonNotExisting() {
         //Given an initial person to modify
-        UUID uuidPerson = UUID.fromString("c076de71-b095-4e98-a58d-3e0ec3199daf");
+        Person person = PersonFaker.generate();
+        UUID uuidPerson = UUID.randomUUID();
         String newEmail = "noiretrouge@email.com";
 
-        Person person = new Person(uuidPerson, "gio", "Adar", null, "g2@mail.fr", null, null, null);
-
-        UpdatePersonDTO personTomodify = new UpdatePersonDTO("gio", "Mathy", newEmail);
+        UpdatePersonDTO personToModify = new UpdatePersonDTO("gio", "Mathy", newEmail);
 
         //When we try to update the person
-        assertThrows(NotFoundException.class, () -> {
-            when(personRepository.findById(any())).thenReturn(null);
-            personServiceImpl.updatePerson(uuidPerson, personTomodify);
-        });
+
+        when(personRepository.findById(any())).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> personServiceImpl.updatePerson(uuidPerson, personToModify));
 
         //Then we verify if we search the person, but we don't save the changement
         assertThat(person.getEmail()).isNotEqualTo(newEmail);
@@ -150,7 +144,7 @@ public class PersonServiceImplTest {
     @Test
     void deletePerson() {
         //Given a person to delete
-        Person personToDelete = new Person();
+        Person personToDelete = PersonFaker.generate();
 
         //When we delete the person
         personServiceImpl.deletePerson(personToDelete);
@@ -164,8 +158,8 @@ public class PersonServiceImplTest {
     @Test
     void addConnection() {
         //Given two persons to add connection between us
-        Person person1 = new Person();
-        Person person2 = new Person();
+        Person person1 = PersonFaker.generate();
+        Person person2 = PersonFaker.generate();
 
         //When we add the connection
         personServiceImpl.addConnection(person1, person2);
@@ -179,7 +173,7 @@ public class PersonServiceImplTest {
     @Test
     void addConnectionFailed() {
         //Given two persons to add connection between us
-        Person person2 = new Person();
+        Person person2 = PersonFaker.generate();
         Person person1 = new Person(null, "Gio", "Dar", null, null, null, null, List.of(person2));
 
         //When we add the connection
@@ -195,7 +189,7 @@ public class PersonServiceImplTest {
     @Test
     void removeConnection() {
         //Given two persons with a connection we want to remove
-        Person person2 = new Person();
+        Person person2 = PersonFaker.generate();
         Person person1 = new Person(null, "Gio", "Dar", null, null, null, null, new ArrayList<>(List.of(person2)));
 
         //When we try to remove connection

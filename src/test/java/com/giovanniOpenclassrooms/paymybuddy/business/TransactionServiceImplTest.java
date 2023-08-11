@@ -6,6 +6,8 @@ import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import com.giovanniOpenclassrooms.paymybuddy.repository.TransactionRepository;
+import com.giovanniOpenclassrooms.paymybuddy.utils.PersonFaker;
+import com.giovanniOpenclassrooms.paymybuddy.utils.TransactionFaker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -34,8 +36,8 @@ public class TransactionServiceImplTest {
     @Test
     void getAllTransactions() {
         //Given an initial list of transactions
-        Transaction transaction1 = new Transaction();
-        Transaction transaction2 = new Transaction();
+        Transaction transaction1 = TransactionFaker.generate();
+        Transaction transaction2 = TransactionFaker.generate();
 
         List<Transaction> transactions = List.of(transaction1, transaction2);
 
@@ -52,8 +54,10 @@ public class TransactionServiceImplTest {
     @Test
     void getTransactionById() {
         //Given an initial transaction with an id
-        UUID uuidTransaction = UUID.fromString("c076de71-b095-4e98-a58d-3e0ec3199daf");
-        Transaction transaction = new Transaction(uuidTransaction, null, null, null, null, null);
+        UUID uuidTransaction = UUID.randomUUID();
+        Transaction transaction = TransactionFaker.generate();
+        transaction.setTransactionId(uuidTransaction);
+
 
         //When we try to get this transaction
         when(transactionRepository.findById(any())).thenReturn(Optional.of(transaction));
@@ -68,12 +72,12 @@ public class TransactionServiceImplTest {
     @Test
     void getTransactionsByPerson() { //TODO : changer transaction2 les 2 UUID si on récupère tout, sinon laisser comme ça
         //Given initial list of transactions and the corresponding persons
-        UUID uuidPerson1 = UUID.fromString("c076de71-b095-4e98-a58d-3e0ec3199daf");
-        Person person1 = new Person(uuidPerson1, "gio", "Dar", null, null, null, null, null);
-        UUID uuidPerson2 = UUID.fromString("939b3408-1767-48e0-a45d-62f836ebaf77");
-        //Person person2 = new Person(uuidPerson2, "Agio", "Adar", null, null, null, null, null);
-        UUID uuidPerson3 = UUID.fromString("d6c0122e-ed94-4222-9bdd-480ef6867b84");
-        //Person person3 = new Person(uuidPerson3, "Bgio", "Bdar", null, null, null, null, null);
+        UUID uuidPerson1 = UUID.randomUUID();
+        Person person1 = PersonFaker.generate();
+        person1.setPersonId(uuidPerson1);
+
+        UUID uuidPerson2 = UUID.randomUUID();
+        UUID uuidPerson3 = UUID.randomUUID();
 
         Transaction transaction1 = new Transaction(uuidPerson1, uuidPerson2, null, null);
         Transaction transaction2 = new Transaction(uuidPerson1, uuidPerson3, null, null);
@@ -94,10 +98,16 @@ public class TransactionServiceImplTest {
     @Test
     void transferElectronicMoney() {
         //Given an initial money transfer
-        UUID debtorId = UUID.fromString("c076de71-b095-4e98-a58d-3e0ec3199daf");
-        Person debtor = new Person(debtorId, "gio", "Dar", null, null, null, new BigDecimal("50.0"), null);
-        UUID creditorId = UUID.fromString("939b3408-1767-48e0-a45d-62f836ebaf77");
-        Person creditor = new Person(creditorId, "Agio", "Asar", null, null, null, new BigDecimal("50.0"), null);
+        UUID debtorId = UUID.randomUUID();
+        Person debtor = PersonFaker.generate();
+        debtor.setPersonId(debtorId);
+        debtor.setAmountBalance(new BigDecimal("50.0"));
+
+        UUID creditorId = UUID.randomUUID();
+        Person creditor = PersonFaker.generate();
+        creditor.setPersonId(creditorId);
+        creditor.setAmountBalance(new BigDecimal("50.0"));
+
         TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.0"), "Yo");
 
         //When we make the transfer
@@ -116,16 +126,23 @@ public class TransactionServiceImplTest {
     @Test
     void transferElectronicMoneyFailedNotMoney() {
         //Given an initial money transfer with a debtor without money
-        UUID debtorId = UUID.fromString("c076de71-b095-4e98-a58d-3e0ec3199daf");
-        Person debtor = new Person(debtorId, "gio", "Dar", null, null, null, new BigDecimal("0.0"), null);
+        UUID debtorId = UUID.randomUUID();
+        Person debtor = PersonFaker.generate();
+        debtor.setPersonId(debtorId);
+        debtor.setAmountBalance(new BigDecimal("0.0"));
+
         UUID creditorId = UUID.fromString("939b3408-1767-48e0-a45d-62f836ebaf77");
-        Person creditor = new Person(creditorId, "Agio", "Asar", null, null, null, new BigDecimal("50.0"), null);
+        Person creditor = PersonFaker.generate();
+        creditor.setPersonId(creditorId);
+        creditor.setAmountBalance(new BigDecimal("50.0"));
+
         TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.0"), "Yo");
 
         //When we try to make the transfer
+        when(personRepository.findById(debtorId)).thenReturn(Optional.of(debtor));
+        when(personRepository.findById(creditorId)).thenReturn(Optional.of(creditor));
+
         assertThrows(NegativeBalanceAccount.class, () -> {
-            when(personRepository.findById(debtorId)).thenReturn(Optional.of(debtor));
-            when(personRepository.findById(creditorId)).thenReturn(Optional.of(creditor));
             transactionServiceImpl.transferElectronicMoney(transactionDTO);
         });
 
