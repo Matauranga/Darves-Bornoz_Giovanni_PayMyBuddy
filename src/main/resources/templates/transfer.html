@@ -15,20 +15,31 @@
 
     <div th:if="${param.successAddConnection}">
         <div class="alert alert-info">
-            Congrats you have a new friend !
+            Congrats you have a new friend!
         </div>
     </div>
 
     <div th:if="${param.failedAddConnection}">
         <div class="alert alert-danger">
-            An error occurred, your friend is not registered !
-            Verify the email.
+            An error occurred, verify the email.
         </div>
     </div>
 
     <div th:if="${param.successTransfer}">
         <div class="alert alert-info">
-            Congrats you have lost money !
+            Congrats you have lost money!
+        </div>
+    </div>
+
+    <div th:if="${param.transferFailed}">
+        <div class="alert alert-danger">
+            Oops something went wrong, please try again!
+        </div>
+    </div>
+
+    <div th:if="${param.NotEnoughMoney}">
+        <div class="alert alert-danger">
+            You don't have enough money in your account, fill it up or change the amount of your transfer.
         </div>
     </div>
 
@@ -56,7 +67,7 @@
             <form class="form-container"
                   th:action="@{/transfer/addFriend}"
                   method="POST"
-                  style=" max-width: 300px;
+                  style=" width: 400px;
                           padding: 20px;
                           background-color: #fff;"
             >
@@ -210,6 +221,18 @@
       function closeForm() {
         document.getElementById("popupForm").style.display = "none";
       }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

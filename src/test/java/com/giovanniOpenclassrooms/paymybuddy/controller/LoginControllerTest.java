@@ -38,7 +38,7 @@ class LoginControllerTest {//TODO frank
         }
     */
 
-    @DisplayName("ry to perform method get on /signUp")
+    @DisplayName("Try to perform method get on /signUp")
     @Test
     void showRegistrationForm() throws Exception {
         mockMvc.perform(get("/signUp"))

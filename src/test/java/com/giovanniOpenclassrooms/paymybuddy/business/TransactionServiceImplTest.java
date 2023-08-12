@@ -2,6 +2,7 @@ package com.giovanniOpenclassrooms.paymybuddy.business;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccount;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.NotFoundException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
@@ -54,10 +55,8 @@ public class TransactionServiceImplTest {
     @Test
     void getTransactionById() {
         //Given an initial transaction with an id
-        UUID uuidTransaction = UUID.randomUUID();
         Transaction transaction = TransactionFaker.generate();
-        transaction.setTransactionId(uuidTransaction);
-
+        UUID uuidTransaction = transaction.getTransactionId();
 
         //When we try to get this transaction
         when(transactionRepository.findById(any())).thenReturn(Optional.of(transaction));
@@ -72,9 +71,8 @@ public class TransactionServiceImplTest {
     @Test
     void getTransactionsByPerson() { //TODO : changer transaction2 les 2 UUID si on récupère tout, sinon laisser comme ça
         //Given initial list of transactions and the corresponding persons
-        UUID uuidPerson1 = UUID.randomUUID();
         Person person1 = PersonFaker.generate();
-        person1.setPersonId(uuidPerson1);
+        UUID uuidPerson1 = person1.getPersonId();
 
         UUID uuidPerson2 = UUID.randomUUID();
         UUID uuidPerson3 = UUID.randomUUID();
@@ -98,14 +96,12 @@ public class TransactionServiceImplTest {
     @Test
     void transferElectronicMoney() {
         //Given an initial money transfer
-        UUID debtorId = UUID.randomUUID();
         Person debtor = PersonFaker.generate();
-        debtor.setPersonId(debtorId);
+        UUID debtorId = debtor.getPersonId();
         debtor.setAmountBalance(new BigDecimal("50.0"));
 
-        UUID creditorId = UUID.randomUUID();
         Person creditor = PersonFaker.generate();
-        creditor.setPersonId(creditorId);
+        UUID creditorId = creditor.getPersonId();
         creditor.setAmountBalance(new BigDecimal("50.0"));
 
         TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.0"), "Yo");
@@ -126,14 +122,13 @@ public class TransactionServiceImplTest {
     @Test
     void transferElectronicMoneyFailedNotMoney() {
         //Given an initial money transfer with a debtor without money
-        UUID debtorId = UUID.randomUUID();
         Person debtor = PersonFaker.generate();
-        debtor.setPersonId(debtorId);
+        UUID debtorId = debtor.getPersonId();
         debtor.setAmountBalance(new BigDecimal("0.0"));
 
-        UUID creditorId = UUID.fromString("939b3408-1767-48e0-a45d-62f836ebaf77");
+
         Person creditor = PersonFaker.generate();
-        creditor.setPersonId(creditorId);
+        UUID creditorId = creditor.getPersonId();
         creditor.setAmountBalance(new BigDecimal("50.0"));
 
         TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.0"), "Yo");
@@ -143,6 +138,34 @@ public class TransactionServiceImplTest {
         when(personRepository.findById(creditorId)).thenReturn(Optional.of(creditor));
 
         assertThrows(NegativeBalanceAccount.class, () -> {
+            transactionServiceImpl.transferElectronicMoney(transactionDTO);
+        });
+
+        //Then we verify if the transfer don't work
+        verify(personRepository, times(1)).findById(any());
+        verify(personRepository, times(0)).saveAll(any());
+        verify(transactionRepository, times(0)).save(any());
+        assertThat(debtor.getAmountBalance()).isEqualTo(new BigDecimal("0.0"));
+        assertThat(creditor.getAmountBalance()).isEqualTo(new BigDecimal("50.0"));
+    }
+
+
+    @DisplayName("Try to proceed to an electronic transfer but don't find a person")//integration
+    @Test
+    void transferElectronicMoneyFailedPersonNotFind() {
+        //Given an initial money transfer with a debtor without money
+        Person debtor = PersonFaker.generate();
+        UUID debtorId = debtor.getPersonId();
+        debtor.setAmountBalance(new BigDecimal("0.0"));
+
+        Person creditor = PersonFaker.generate();
+        UUID creditorId = creditor.getPersonId();
+        creditor.setAmountBalance(new BigDecimal("50.0"));
+
+        TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.0"), "Yo");
+
+        //When we try to make the transfer
+        assertThrows(NotFoundException.class, () -> {
             transactionServiceImpl.transferElectronicMoney(transactionDTO);
         });
 

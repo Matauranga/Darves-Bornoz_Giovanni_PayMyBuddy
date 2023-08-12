@@ -4,6 +4,7 @@ import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.TransferDTO;
 import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
 import com.giovanniOpenclassrooms.paymybuddy.business.TransactionService;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccount;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ public class TransferController {
 
     @Autowired
     private PersonService personService;
-
 
     @Autowired
     private PersonRepository personRepository;
@@ -55,15 +55,16 @@ public class TransferController {
      */
     @PostMapping("/transfer/addFriend")
     public String addFriend(Authentication authentication, String friendEmail) {
-        if (personRepository.existsByEmail(friendEmail) && !authentication.getName().equals(friendEmail)) {
-            personService.addConnection(
+
+        try {
+            return personService.addConnection(
                     personService.getPersonByEmail(authentication.getName()),
                     personService.getPersonByEmail(friendEmail)
             );
-            return "redirect:/transfer?successAddConnection";
-        }
 
-        return "redirect:/transfer?failedAddConnection";
+        } catch (Exception exception) {
+            return "redirect:/transfer?failedAddConnection";
+        }
     }
 
 
@@ -77,14 +78,22 @@ public class TransferController {
     @PostMapping("/transfer/transfer-request")
     public String sendMoney(Authentication authentication, @ModelAttribute("transferDTO") TransferDTO transferDTO) {
 
-        Person debtor = personService.getPersonByEmail(authentication.getName());
-        Person creditor = personService.getPersonByEmail(transferDTO.getCreditorEmail());
-        BigDecimal amount = transferDTO.getAmount();
-        String description = transferDTO.getDescription();
+        try {
+            Person debtor = personService.getPersonByEmail(authentication.getName());
+            Person creditor = personService.getPersonByEmail(transferDTO.getCreditorEmail());
+            BigDecimal amount = transferDTO.getAmount();
+            String description = transferDTO.getDescription();
 
-        transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
+            transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
 
-        return "redirect:/transfer?successTransfer";
+            return "redirect:/transfer?successTransfer";
+
+        } catch (NegativeBalanceAccount negativeBalanceAccount) {
+            return "redirect:/transfer?NotEnoughMoney";
+        } catch (Exception exception) {
+            return "redirect:/transfer?transferFailed";
+        }
+
     }
 
 }

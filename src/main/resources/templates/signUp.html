@@ -13,13 +13,6 @@
 
 <div class="container justify-content-center w-25 p-4"
      style="margin-top: 5em; border-radius: 15px; border: 2px solid lightgray;">
-
-    <div th:if="${param.success}">
-        <div class="alert alert-info">
-            You have successfully registered !
-        </div>
-    </div>
-
     <form
             method="post"
             role="form"
@@ -28,6 +21,12 @@
     >
         <div class="text-center my-4">
             <a class="btn btn-lg btn-success" href="login.html">Pay My Buddy</a>
+        </div>
+
+        <div th:if="${param.success}">
+            <div class="alert alert-info">
+                You have successfully registered !
+            </div>
         </div>
 
         <div th:if="${errorMessage}">

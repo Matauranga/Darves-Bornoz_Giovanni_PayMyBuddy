@@ -101,9 +101,8 @@ public class PersonServiceImplTest {
     void updatePerson() {//TODO a modifier quant la fonction update sera modifié
         //Given an initial person to modify
         Person person = PersonFaker.generate();
-        UUID uuidPerson = UUID.randomUUID();
+        UUID uuidPerson = person.getPersonId();
         String newEmail = "noiretrouge@email.com";
-        person.setPersonId(uuidPerson);
 
         UpdatePersonDTO personToModify = new UpdatePersonDTO("gio", "Adar", newEmail);
 
@@ -123,7 +122,7 @@ public class PersonServiceImplTest {
     void updatePersonNotExisting() {
         //Given an initial person to modify
         Person person = PersonFaker.generate();
-        UUID uuidPerson = UUID.randomUUID();
+        UUID uuidPerson = person.getPersonId();
         String newEmail = "noiretrouge@email.com";
 
         UpdatePersonDTO personToModify = new UpdatePersonDTO("gio", "Mathy", newEmail);
@@ -162,6 +161,7 @@ public class PersonServiceImplTest {
         Person person2 = PersonFaker.generate();
 
         //When we add the connection
+        when(personRepository.existsByEmail(any())).thenReturn(true);
         personServiceImpl.addConnection(person1, person2);
 
         //Then we verify if the connection exists and if there is saved
@@ -173,14 +173,48 @@ public class PersonServiceImplTest {
     @Test
     void addConnectionFailed() {
         //Given two persons to add connection between us
+        Person person1 = PersonFaker.generate();
         Person person2 = PersonFaker.generate();
-        Person person1 = new Person(null, "Gio", "Dar", null, null, null, null, List.of(person2));
+        person1.setConnectionsList(List.of(person2));
 
         //When we add the connection
+        when(personRepository.existsByEmail(any())).thenReturn(true);
         personServiceImpl.addConnection(person1, person2);
 
         //Then we verify if the connection still exists and if there is not saved
         assertThat(person1.getConnectionsList()).contains(person2);
+        verify(personRepository, times(0)).save(any());
+    }
+
+    @DisplayName("Test to add a connection, but failed because person try to add himself")
+    @Test
+    void addConnectionFailedBecauseOfSameEmail() {
+        //Given two persons to add connection between us
+        Person person1 = PersonFaker.generate();
+
+
+        //When we add the connection
+        when(personRepository.existsByEmail(any())).thenReturn(true);
+        personServiceImpl.addConnection(person1, person1);
+
+        //Then we verify if the connection still exists and if there is not saved
+        assertThat(person1.getConnectionsList()).isEmpty();
+        verify(personRepository, times(0)).save(any());
+    }
+
+    @DisplayName("Test to add a connection, but failed because of friend's email not register")
+    @Test
+    void addConnectionFailedBecauseFriendEmailNotExists() {
+        //Given two persons to add connection between us
+        Person person1 = PersonFaker.generate();
+        Person person2 = PersonFaker.generate();
+
+        //When we add the connection
+        when(personRepository.existsByEmail(any())).thenReturn(false);
+        personServiceImpl.addConnection(person1, person2);
+
+        //Then we verify if the connection still exists and if there is not saved
+        assertThat(person1.getConnectionsList()).isEmpty();
         verify(personRepository, times(0)).save(any());
     }
 
