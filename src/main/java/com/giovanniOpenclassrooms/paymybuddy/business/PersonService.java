@@ -18,7 +18,7 @@ public interface PersonService {
 
     void deletePerson(Person personToDelete);
 
-    String addConnection(Person person, Person friend);
+    void addConnection(Person person, Person friend);
 
     void removeConnection(Person person, Person friendToDelete);
 

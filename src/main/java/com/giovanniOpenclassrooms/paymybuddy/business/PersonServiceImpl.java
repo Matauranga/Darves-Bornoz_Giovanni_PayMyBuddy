@@ -2,6 +2,7 @@ package com.giovanniOpenclassrooms.paymybuddy.business;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.UpdatePersonDTO;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.AddConnectionFailedException;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.NotFoundException;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.PersonAlreadyExistsException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
@@ -93,16 +94,20 @@ public class PersonServiceImpl implements PersonService {
      *
      * @param person the person who add connection
      * @param friend the person to connect to
-     * @return
      */
-    public String addConnection(Person person, Person friend) {// TODO : vérifier si la personne est déjà dans la liste d'amis et renvoyer info dans front
+    public void addConnection(Person person, Person friend) {
 
-        if (personRepository.existsByEmail(friend.getEmail()) && !person.getPersonId().equals(friend.getPersonId()) && !person.getConnectionsList().contains(friend)) {
-            person.getConnectionsList().add(friend);
-            savePerson(person);
-            return "redirect:/transfer?successAddConnection";
+        try {
+            if (personRepository.existsByEmail(friend.getEmail()) && !person.getPersonId().equals(friend.getPersonId()) && !person.getConnectionsList().contains(friend)) {
+                person.getConnectionsList().add(friend);
+                savePerson(person);
+            } else {
+                throw new AddConnectionFailedException("");
+            }
+        } catch (Exception e) {
+            throw new AddConnectionFailedException("An error occurred, please verify the email.");
         }
-        return "redirect:/transfer?failedAddConnection";
+
     }
 
     /**

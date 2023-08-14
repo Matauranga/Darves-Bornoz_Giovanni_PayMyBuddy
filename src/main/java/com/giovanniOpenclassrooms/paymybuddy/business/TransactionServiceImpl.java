@@ -6,8 +6,12 @@ import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import com.giovanniOpenclassrooms.paymybuddy.repository.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,6 +35,18 @@ public class TransactionServiceImpl implements TransactionService {
      */
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
+    }
+
+    /**
+     *
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public Page<Transaction> findPaginated(int pageNo, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return this.transactionRepository.findAll(pageable);
     }
 
     /**
@@ -58,12 +74,12 @@ public class TransactionServiceImpl implements TransactionService {
                 .toList();
     }
 
-
     /**
      * Method to proceed at a transfer money between two persons
      *
      * @param transactionDTO The DTO that contains all transfer information (debtorId, creditorId, amount, description)
      */
+    @Transactional
     public void transferElectronicMoney(TransactionDTO transactionDTO) {
 
         final BigDecimal amount = transactionDTO.amount();

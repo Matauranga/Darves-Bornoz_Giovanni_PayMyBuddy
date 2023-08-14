@@ -35,12 +35,12 @@ public class LoginController {
      * @param model
      * @return the sign-up page
      */
-    @GetMapping("/signUp")
+    @GetMapping("/sign-up")
     public String showRegistrationForm(Model model) {
 
         // create model object to store form data
         model.addAttribute("person", new RegisterPersonDTO());
-        return "signUp";
+        return "sign-up";
     }
 
 
@@ -52,22 +52,25 @@ public class LoginController {
      * @param model
      * @return the sign-up page
      */
-    @PostMapping("/signUp/save")
+    @PostMapping("/sign-up/save")
     public String registration(@Valid @ModelAttribute("person") RegisterPersonDTO registerPersonDTO, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
             model.addAttribute("person", registerPersonDTO);
-            return "/signUp";
+            return "sign-up";
         }
 
         try {
             personService.saveNewPersonFromDTO(registerPersonDTO);
+            model.addAttribute("success", true);
         } catch (Exception exception) {
+
             model.addAttribute("errorMessage", exception.getMessage());
-            return "/signUp";
+            return "sign-up";
+
         }
 
-        return "redirect:/signUp?success";
+        return "sign-up";
     }
 
 }

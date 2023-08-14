@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,11 +38,25 @@ public class TransferController {
      */
     @GetMapping("/transfer")
     public String transfer(Authentication authentication, Model model) {
+        int pages = 1;
+
         model.addAttribute("transferDTO", new TransferDTO());
 
         Person person = personService.getPersonByEmail(authentication.getName());
         model.addAttribute("connections", person.getConnectionsList());
+
+
+      /*  Page<Transaction> page = transactionService.findPaginated(pages, 10);
+        List<Transaction> listEmployees = page.getContent();
+
+        model.addAttribute("currentPage", pages);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        //model.addAttribute("transactionsList", listEmployees);*/
+
+
         model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
+
         return "transfer";
     }
 
@@ -53,18 +68,28 @@ public class TransferController {
      * @param friendEmail    the email of the person to make the connection
      * @return the transfer page
      */
-    @PostMapping("/transfer/addFriend")
-    public String addFriend(Authentication authentication, String friendEmail) {
+    @PostMapping("/transfer/add-friend")
+    public String addFriend(Authentication authentication, TransferDTO transferDTO, BindingResult result, String friendEmail, Model model) {
 
         try {
-            return personService.addConnection(
+            personService.addConnection(
                     personService.getPersonByEmail(authentication.getName()),
-                    personService.getPersonByEmail(friendEmail)
-            );
+                    personService.getPersonByEmail(friendEmail));
+
+            model.addAttribute("successAddConnection", true);
 
         } catch (Exception exception) {
-            return "redirect:/transfer?failedAddConnection";
+            model.addAttribute("failedAddConnection", exception.getMessage());
+
+            return "transfer";
+
+        } finally {
+            Person person = personService.getPersonByEmail(authentication.getName());
+            model.addAttribute("connections", person.getConnectionsList());
+            model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
+
         }
+        return "transfer";
     }
 
 
@@ -76,7 +101,7 @@ public class TransferController {
      * @return the transfer page
      */
     @PostMapping("/transfer/transfer-request")
-    public String sendMoney(Authentication authentication, @ModelAttribute("transferDTO") TransferDTO transferDTO) {
+    public String sendMoney(Authentication authentication, @ModelAttribute("transferDTO") TransferDTO transferDTO, Model model) {
 
         try {
             Person debtor = personService.getPersonByEmail(authentication.getName());
@@ -85,13 +110,20 @@ public class TransferController {
             String description = transferDTO.getDescription();
 
             transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
-
-            return "redirect:/transfer?successTransfer";
+            model.addAttribute("successTransfer", true);
+            return "transfer";
 
         } catch (NegativeBalanceAccount negativeBalanceAccount) {
-            return "redirect:/transfer?NotEnoughMoney";
+            model.addAttribute("NotEnoughMoney", true);
+            return "transfer";
         } catch (Exception exception) {
-            return "redirect:/transfer?transferFailed";
+            model.addAttribute("transferFailed", true);
+            return "transfer";
+        } finally {
+            Person person = personService.getPersonByEmail(authentication.getName());
+            model.addAttribute("connections", person.getConnectionsList());
+
+            model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
         }
 
     }

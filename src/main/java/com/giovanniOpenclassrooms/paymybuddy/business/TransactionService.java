@@ -3,6 +3,7 @@ package com.giovanniOpenclassrooms.paymybuddy.business;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,8 @@ public interface TransactionService {
     public List<Transaction> getTransactionsByPerson(Person person);
 
     public void transferElectronicMoney(TransactionDTO transactionDTO);
+
+    public Page<Transaction> findPaginated(int pageNo, int pageSize);
 
 
 }

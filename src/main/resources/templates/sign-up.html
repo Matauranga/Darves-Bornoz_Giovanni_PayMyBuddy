@@ -16,14 +16,14 @@
     <form
             method="post"
             role="form"
-            th:action="@{/signUp/save}"
+            th:action="@{/sign-up/save}"
             th:object="${person}"
     >
         <div class="text-center my-4">
             <a class="btn btn-lg btn-success" href="login.html">Pay My Buddy</a>
         </div>
 
-        <div th:if="${param.success}">
+        <div th:if="${success}">
             <div class="alert alert-info">
                 You have successfully registered !
             </div>

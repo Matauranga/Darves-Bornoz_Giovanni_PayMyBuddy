@@ -15,31 +15,31 @@
 
 <div style="margin: 100px 15%;">
 
-    <div th:if="${param.successAddConnection}">
+    <div th:if="${successAddConnection}">
         <div class="alert alert-info">
             Congrats you have a new friend!
         </div>
     </div>
 
-    <div th:if="${param.successTransfer}">
+    <div th:if="${successTransfer}">
         <div class="alert alert-info">
             Congrats you have lost money!
         </div>
     </div>
 
-    <div th:if="${param.failedAddConnection}">
+    <div th:if="${failedAddConnection}">
         <div class="alert alert-danger">
-            An error occurred, verify the email.
+            <div th:text="${failedAddConnection}"></div>
         </div>
     </div>
 
-    <div th:if="${param.transferFailed}">
+    <div th:if="${transferFailed}">
         <div class="alert alert-danger">
             Oops something went wrong, please try again!
         </div>
     </div>
 
-    <div th:if="${param.NotEnoughMoney}">
+    <div th:if="${NotEnoughMoney}">
         <div class="alert alert-danger">
             You don't have enough money in your account, fill it up or change the amount of your transfer.
         </div>
@@ -67,7 +67,7 @@
         >
 
             <form class="form-container"
-                  th:action="@{/transfer/addFriend}"
+                  th:action="@{/transfer/add-friend}"
                   method="POST"
                   style=" width: 400px;
                           padding: 20px;
@@ -113,8 +113,8 @@
                             <option value="" selected hidden>Select A Connection</option>
                             <option
                                     th:each="friend : ${connections}"
-                                    th:value="${friend.getEmail()}"
-                                    th:text="${friend.getEmail()}"
+                                    th:value="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
+                                    th:text="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
                             >
                             </option>
                         </select>
@@ -127,10 +127,11 @@
                                 name="amount"
                                 placeholder=" 0€"
                                 th:field="*{amount}"
+                                min="1"
                                 step=".01"
                                 id="amount" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <input
 
                                 type="text"
@@ -161,7 +162,7 @@
 
             <div class="table-responsive">
                 <table
-                        class="table table-striped table-hover mt-2"
+                        class="table table-striped table-hover table-bordered mt-2"
                         id="transactionTable">
                     <thead>
                     <h5 class="text-left">My Transactions</h5>
@@ -181,29 +182,38 @@
                 </table>
 
                 <!--
-                                <div
-                                        class="list-inline text-xl-center mb-3 mt-3 blockquote"
-                                        style="padding-right: 6rem;"
-                                >
-                                    <div
-                                            th:if="${transactionList.totalPages > 0}"
-                                            class="list-inline-item p-0"
-                                            th:each="pageNumber : ${pageNumbers}"
-                                    >
-                                        <ul>
-                                            <ol>
-                                                <a
-                                                        th:href="@{/transfer(size=${transactionList.size}, page=${pageNumber})}"
-                                                        th:text=${pageNumber}
-                                                        th:class="${pageNumber==transactionList.number + 1} ? active">
-                                                </a>
-                                            </ol>
-                                        </ul>
+                                <div th:if="${totalPages > 1}">
+
+                                    <div class="row col-sm-10">
+
+                                        <div class="col-sm-1">
+
+                                            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+
+                                                <span th:unless="${currentPage != i}">[[${i}]]
+                                                </span>
+                                                &nbsp; &nbsp;
+
+                                            </span>
+
+                                        </div>
+
+                                        <div class="col-sm-1">
+                                            <a th:if="${currentPage < totalPages}" th:href="@{'?pages=' + ${currentPage + 1}}">Next</a>
+                                            <span th:unless="${currentPage < totalPages}">Next</span>
+                                        </div>
+
+                                        <div class="col-sm-1">
+                                            <a th:if="${currentPage < totalPages}" th:href="@{'?pages=' + ${totalPages}}">Last</a>
+                                            <span th:unless="${currentPage < totalPages}">Last</span>
+                                        </div>
+
+
                                     </div>
+
                                 </div>
+                    -->
 
-
-                 -->
             </div>
 
         </div>
@@ -213,7 +223,6 @@
 </div>
 
 <script>
-
 
       function openForm() {
         document.getElementById("popupForm").style.display = "block";
@@ -233,69 +242,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
-
 
 </body>
 </html>
