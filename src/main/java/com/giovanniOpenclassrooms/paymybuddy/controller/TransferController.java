@@ -125,7 +125,6 @@ public class TransferController {
 
             model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
         }
-
     }
 
 }

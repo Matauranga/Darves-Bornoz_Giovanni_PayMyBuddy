@@ -2,6 +2,7 @@ package com.giovanniOpenclassrooms.paymybuddy.business;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.UpdatePersonDTO;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.AddConnectionFailedException;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.NotFoundException;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.PersonAlreadyExistsException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
@@ -14,7 +15,10 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -179,7 +183,7 @@ public class PersonServiceImplTest {
 
         //When we add the connection
         when(personRepository.existsByEmail(any())).thenReturn(true);
-        personServiceImpl.addConnection(person1, person2);
+        assertThrows(AddConnectionFailedException.class, () -> personServiceImpl.addConnection(person1, person2));
 
         //Then we verify if the connection still exists and if there is not saved
         assertThat(person1.getConnectionsList()).contains(person2);
@@ -195,7 +199,7 @@ public class PersonServiceImplTest {
 
         //When we add the connection
         when(personRepository.existsByEmail(any())).thenReturn(true);
-        personServiceImpl.addConnection(person1, person1);
+        assertThrows(AddConnectionFailedException.class, () -> personServiceImpl.addConnection(person1, person1));
 
         //Then we verify if the connection still exists and if there is not saved
         assertThat(person1.getConnectionsList()).isEmpty();
@@ -211,7 +215,7 @@ public class PersonServiceImplTest {
 
         //When we add the connection
         when(personRepository.existsByEmail(any())).thenReturn(false);
-        personServiceImpl.addConnection(person1, person2);
+        assertThrows(AddConnectionFailedException.class, () -> personServiceImpl.addConnection(person1, person2));
 
         //Then we verify if the connection still exists and if there is not saved
         assertThat(person1.getConnectionsList()).isEmpty();
@@ -238,7 +242,7 @@ public class PersonServiceImplTest {
     @Test
     void saveNewPersonFromDTO() throws PersonAlreadyExistsException {
         //Given initial RegisterPersonDTO
-        RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("Baba", "AuRhum", "2023-07-31", "g@mail.fr", "Ahah");
+        RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("Baba", "AuRhum", "2023-07-31", "g@mail.fr", "Aha");
 
         //When we try to save this person
         when(personRepository.existsByEmail(any())).thenReturn(false);
@@ -254,7 +258,7 @@ public class PersonServiceImplTest {
     @Test
     void saveNewPersonFromDTOFailed() {
         //Given initial RegisterPersonDTO
-        RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("Baba", "AuRhum", "2023-07-31", "g@mail.fr", "Ahah");
+        RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("Baba", "AuRhum", "2023-07-31", "g@mail.fr", "Aha");
 
         //When we try to save the person with an existing email
         assertThrows(PersonAlreadyExistsException.class, () -> {

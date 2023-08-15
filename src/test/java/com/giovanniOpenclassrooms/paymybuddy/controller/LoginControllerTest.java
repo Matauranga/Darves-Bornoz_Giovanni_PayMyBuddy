@@ -12,7 +12,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,20 +30,10 @@ class LoginControllerTest {//TODO frank
 
     }
 
-    /*
-    @DisplayName("Try to perform method get on /")
-        @Test
-        void login2() throws Exception {
-            mockMvc.perform(get("/"))
-                    .andExpect(status().isFound());
-
-        }
-    */
-
     @DisplayName("Try to perform method get on /signUp")
     @Test
     void showRegistrationForm() throws Exception {
-        mockMvc.perform(get("/signUp"))
+        mockMvc.perform(get("/sign-up"))
                 .andExpect(status().isOk());
     }
 
@@ -53,23 +44,23 @@ class LoginControllerTest {//TODO frank
         RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("john", "doe", "2000-01-01", "johndoe@gmail.com", "123456");
 
         //When we initiate the request
-        mockMvc.perform(post("/signUp/save")
+        mockMvc.perform(post("/sign-up/save")
                         .flashAttr("person", registerPersonDTO))
                 .andDo(MockMvcResultHandlers.print())
 
                 //Then we verify is all works correctly
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/signUp?success"));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("You have successfully registered !")));
     }
 
     @DisplayName("Try to save a person without filling out the form")
     @Test
-    public void registrationThrowInvalidField() throws Exception {
+    public void registrationThrowInvalidField() throws Exception { //TODO : verify ?
         //Given a DTO of a person who want to register
         RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("", "", "", "", "");
 
         //When we initiate the request
-        mockMvc.perform(post("/signUp/save")
+        mockMvc.perform(post("/sign-up/save")
                         .flashAttr("person", registerPersonDTO))
                 .andDo(MockMvcResultHandlers.print())
 
@@ -85,7 +76,7 @@ class LoginControllerTest {//TODO frank
         RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("john", "doe", "2000-01-01", "g@mail.fr", "123456");
 
         //When we initiate the request
-        mockMvc.perform(post("/signUp/save")
+        mockMvc.perform(post("/sign-up/save")
                         .flashAttr("person", registerPersonDTO))
                 .andDo(MockMvcResultHandlers.print())
 
