@@ -1,5 +1,6 @@
 package com.giovanniOpenclassrooms.paymybuddy.business;
 
+import com.giovanniOpenclassrooms.paymybuddy.DTO.PersonInformationDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.UpdatePersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.AddConnectionFailedException;
@@ -66,19 +67,29 @@ public class PersonServiceImpl implements PersonService {
     /**
      * Method to update person in database
      *
-     * @param id     the id of the person we wants modify
-     * @param person information to modify return by the front in a DTO
+     * @param authenticationEmail email of the person we wants modify
+     * @param updatePersonDTO     to modify return by the front in a DTO
      */
-    public void updatePerson(UUID id, UpdatePersonDTO person) {//TODO : à peaufiner
-        Person personToUpdate = this.personRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Person don't exist")); //TODO : Pk pas couvert quand execute all tests
+    public void updatePerson(String authenticationEmail, UpdatePersonDTO updatePersonDTO) {//TODO : à peaufiner
 
-        personToUpdate.setFirstname(person.firstname());
-        personToUpdate.setLastname(person.lastname());
-        personToUpdate.setEmail(person.email());
+        if (!personRepository.existsByEmail(authenticationEmail)) {
+            throw new NotFoundException("Person doesn't exists");
+        }
 
-        this.personRepository.save(personToUpdate);
+        Person personToUpdate = personRepository.findByEmail(authenticationEmail);
+
+        if (!updatePersonDTO.getFirstname().isBlank()) {
+            personToUpdate.setFirstname(updatePersonDTO.getFirstname());
+        }
+        if (!updatePersonDTO.getLastname().isBlank()) {
+            personToUpdate.setLastname(updatePersonDTO.getLastname());
+        }
+
+        personRepository.save(personToUpdate);
+
+
     }
+
 
     /**
      * Method to delete a person from database
@@ -143,5 +154,27 @@ public class PersonServiceImpl implements PersonService {
 
         savePerson(person);
     }
+
+    /**
+     * @param email
+     * @return
+     */
+    public PersonInformationDTO getPersonInformationDTOFromEmail(String email) {
+
+        if (!personRepository.existsByEmail(email)) {
+            throw new NotFoundException("Person doesn't exists");
+        }
+        Person person = personRepository.findByEmail(email);
+        PersonInformationDTO personInformationDTO = new PersonInformationDTO();
+        personInformationDTO.setFirstname(person.getFirstname());
+        personInformationDTO.setLastname(person.getLastname());
+        personInformationDTO.setEmail(person.getEmail());
+        personInformationDTO.setBirthdate(person.getBirthdate());
+        personInformationDTO.setAccountBalance(person.getAmountBalance());
+        personInformationDTO.setFriendsList(person.getConnectionsList().stream().map(p -> p.getFirstname() + " " + p.getLastname()).toList());
+
+        return personInformationDTO;
+    }
+
 
 }

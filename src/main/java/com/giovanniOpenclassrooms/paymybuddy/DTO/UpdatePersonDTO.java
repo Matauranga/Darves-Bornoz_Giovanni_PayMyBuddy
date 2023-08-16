@@ -1,11 +1,15 @@
 package com.giovanniOpenclassrooms.paymybuddy.DTO;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record UpdatePersonDTO(
-        String firstname,
-        String lastname,
-        String email
-) {
+@NoArgsConstructor
+@Getter
+@Setter
+public class UpdatePersonDTO {
+    String firstname;
+    String lastname;
 }
 
 

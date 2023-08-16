@@ -82,8 +82,11 @@
                         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                         id="friendEmail" required
                 >
-                <button type="submit" class="btn btn-primary" value="saveConnection">Save</button>
-                <button type="button" class="btn cancel" onclick="closeForm()">Fermer</button>
+
+                <div class="text-center my-3">
+                    <button type="submit" class="btn btn-primary" value="saveModification">Save</button>
+                    <button type="button" class="btn btn-danger cancel " onclick="closeForm()">Fermer</button>
+                </div>
             </form>
         </div>
     </div>
@@ -113,7 +116,7 @@
                             <option value="" selected hidden>Select A Connection</option>
                             <option
                                     th:each="friend : ${connections}"
-                                    th:value="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
+                                    th:value="${friend.getEmail()}"
                                     th:text="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
                             >
                             </option>
