@@ -58,7 +58,7 @@ public class PersonServiceImpl implements PersonService {
      * Method that save a person in database
      *
      * @param person to save
-     * @return
+     * @return the person save
      */
     public Person savePerson(Person person) {
         return personRepository.save(person);

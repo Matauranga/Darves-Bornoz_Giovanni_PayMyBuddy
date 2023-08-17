@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,9 +31,11 @@ public class TransferController {
 
 
     /**
+     * Handler method to handle the transfer page
+     *
      * @param authentication information about the person connected to the application
-     * @param model
-     * @returnthe the transfer page
+     * @param model          attribute to be passed to the front
+     * @return the transfer page
      */
     @GetMapping("/transfer")
     public String transfer(Authentication authentication, Model model/*,@PathVariable(value = "pageNo") int pageNo*/) {
@@ -60,16 +61,16 @@ public class TransferController {
         return "transfer";
     }
 
-
     /**
      * Handler method to handle add connection
      *
      * @param authentication information about the person connected to the application
      * @param friendEmail    the email of the person to make the connection
+     * @param model          attribute to be passed to the front
      * @return the transfer page
      */
     @PostMapping("/transfer/add-friend")
-    public String addFriend(Authentication authentication, TransferDTO transferDTO, BindingResult result, String friendEmail, Model model) {
+    public String addFriend(Authentication authentication, TransferDTO transferDTO, String friendEmail, Model model) {//TODO : pk DTO obligatoire ici ?
 
         try {
             personService.addConnection(
@@ -97,7 +98,7 @@ public class TransferController {
      * Handler method to handle a transfer request between two persons
      *
      * @param authentication information about the person connected to the application
-     * @param transferDTO
+     * @param transferDTO    DTO who will take information about the forwarded transfer
      * @return the transfer page
      */
     @PostMapping("/transfer/transfer-request")

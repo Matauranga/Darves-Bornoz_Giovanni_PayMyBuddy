@@ -32,7 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-             //   .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.NEVER))
+                //   .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.NEVER))
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/sign-up/**", "/transfer/**", "/actuator/**", "/profile/**", "/home/**").permitAll()
                                 .requestMatchers(toH2Console()).permitAll()

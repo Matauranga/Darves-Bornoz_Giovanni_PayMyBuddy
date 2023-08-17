@@ -32,7 +32,7 @@ public class LoginController {
     /**
      * Handler method to handle person registration form request
      *
-     * @param model
+     * @param model attribute to be passed to the front
      * @return the sign-up page
      */
     @GetMapping("/sign-up")
@@ -48,8 +48,7 @@ public class LoginController {
      * Handler method to handle person registration form submit request
      *
      * @param registerPersonDTO the information from request to register a person
-     * @param result
-     * @param model
+     * @param model             attribute to be passed to the front
      * @return the sign-up page
      */
     @PostMapping("/sign-up/save")

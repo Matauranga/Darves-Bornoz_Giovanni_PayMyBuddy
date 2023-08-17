@@ -2,12 +2,12 @@ package com.giovanniOpenclassrooms.paymybuddy.model;
 
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccount;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.validator.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -54,8 +54,8 @@ public class Person {
     List<Person> connectionsList = new ArrayList<>();
 
     /**
-     * @param amount
-     * @return
+     * @param amount The amount to credit
+     * @return the amount
      */
     public Person creditBalance(BigDecimal amount) {
         amountBalance = amountBalance.add(amount);

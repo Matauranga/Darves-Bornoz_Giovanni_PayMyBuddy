@@ -291,9 +291,7 @@ public class PersonServiceImplTest {
 
         //When we try to save the person with an existing email
         when(personRepository.existsByEmail(any())).thenReturn(true);
-        assertThrows(PersonAlreadyExistsException.class, () -> {
-            personServiceImpl.saveNewPersonFromDTO(registerPersonDTO);
-        });
+        assertThrows(PersonAlreadyExistsException.class, () -> personServiceImpl.saveNewPersonFromDTO(registerPersonDTO));
 
         //Then we check that we haven't saved the person
         verify(personRepository, times(0)).save(any());
@@ -329,9 +327,7 @@ public class PersonServiceImplTest {
         when(personRepository.existsByEmail(any())).thenReturn(false);
         when(personRepository.findByEmail(any())).thenReturn(null);
 
-        assertThrows(NotFoundException.class, () -> {
-            personServiceImpl.getPersonInformationDTOFromEmail(any());
-        });
+        assertThrows(NotFoundException.class, () -> personServiceImpl.getPersonInformationDTOFromEmail(any()));
 
         //Then we check that we haven't saved the person
         verify(personRepository, times(1)).existsByEmail(any());

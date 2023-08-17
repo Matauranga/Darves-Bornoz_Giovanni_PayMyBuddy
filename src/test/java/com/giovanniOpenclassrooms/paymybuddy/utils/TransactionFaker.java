@@ -2,8 +2,6 @@ package com.giovanniOpenclassrooms.paymybuddy.utils;
 
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import com.github.javafaker.Faker;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.Locale;

@@ -11,15 +11,15 @@ import java.util.UUID;
 
 public interface TransactionService {
 
-    public List<Transaction> getAllTransactions();
+    List<Transaction> getAllTransactions();
 
-    public Optional<Transaction> getTransactionById(UUID transactionId);
+    Optional<Transaction> getTransactionById(UUID transactionId);
 
-    public List<Transaction> getTransactionsByPerson(Person person);
+    List<Transaction> getTransactionsByPerson(Person person);
 
-    public void transferElectronicMoney(TransactionDTO transactionDTO);
+    void transferElectronicMoney(TransactionDTO transactionDTO);
 
-    public Page<Transaction> findPaginated(int pageNo, int pageSize);
+    Page<Transaction> findPaginated(int pageNo, int pageSize);
 
 
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     /**
-     * Handler method to handle profile request
+     * Handler method to handle home request
      *
      * @return the home page
      */

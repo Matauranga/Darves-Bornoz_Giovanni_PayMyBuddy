@@ -137,9 +137,7 @@ public class TransactionServiceImplTest {
         when(personRepository.findById(debtorId)).thenReturn(Optional.of(debtor));
         when(personRepository.findById(creditorId)).thenReturn(Optional.of(creditor));
 
-        assertThrows(NegativeBalanceAccount.class, () -> {
-            transactionServiceImpl.transferElectronicMoney(transactionDTO);
-        });
+        assertThrows(NegativeBalanceAccount.class, () -> transactionServiceImpl.transferElectronicMoney(transactionDTO));
 
         //Then we verify if the transfer don't work
         verify(personRepository, times(1)).findById(any());
@@ -163,9 +161,7 @@ public class TransactionServiceImplTest {
         when(personRepository.findById(debtorId)).thenReturn(Optional.empty());
         when(personRepository.findById(creditorId)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> {
-            transactionServiceImpl.transferElectronicMoney(transactionDTO);
-        });
+        assertThrows(NotFoundException.class, () -> transactionServiceImpl.transferElectronicMoney(transactionDTO));
 
         //Then we verify if the transfer don't work
         verify(personRepository, times(1)).findById(any());

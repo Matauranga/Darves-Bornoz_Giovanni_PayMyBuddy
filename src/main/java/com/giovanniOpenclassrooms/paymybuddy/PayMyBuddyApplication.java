@@ -8,16 +8,19 @@ public class PayMyBuddyApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PayMyBuddyApplication.class, args);
-    }       //TODO : Franck importance de "index.html"
+    }
 }
 
 
-/*TODO:
-        Mettre en place la javadoc
-        Mettre en place les tests
-        Créer barre Nav/logut
-        Créer page edit profil
-        Créer page Home/index
-        Mettre en place les DTO ?
-
+/* TODO:
+        Créer page Home "page d'aide"
+        gérer deco auto avec securityconfig
+        gérer les taxes sur transaction
+        gérer relation avec compte externe
+        gérer transaction dans profile
+        revoir le digramme
+        faire les script sql
+        faire les livrables
+        changer ordre des transactions dans la liste affichée
+        + pagination si possible
  */

@@ -22,6 +22,8 @@ public class ProfileController {
     /**
      * Handler method to handle profile request
      *
+     * @param authentication the parameter that contains information about the logged in person
+     * @param model          attribute to be passed to the front
      * @return the profile page
      */
     @GetMapping("/profile")
@@ -35,6 +37,13 @@ public class ProfileController {
         return "profile";
     }
 
+    /**
+     * @param authentication  the parameter that contains information about the logged in person
+     * @param updatePersonDTO
+     * @param result
+     * @param model           attribute to be passed to the front
+     * @return the profile page
+     */
     @PostMapping("/profile/edit")
     public String editProfileInformation(Authentication authentication, @Valid @ModelAttribute("savePersonFromProfile") UpdatePersonDTO updatePersonDTO, BindingResult result, Model model) {
 
@@ -42,7 +51,7 @@ public class ProfileController {
 
             personService.updatePerson(authentication.getName(), updatePersonDTO);
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         } finally {
             PersonInformationDTO personInformationDTO = personService.getPersonInformationDTOFromEmail(authentication.getName());

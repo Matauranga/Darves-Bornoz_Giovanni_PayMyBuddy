@@ -12,7 +12,6 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 
 @Component
@@ -26,22 +25,11 @@ public class LoggingFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(requestWrapper, responseWrapper);
 
-        String responseBody = getStringValue(responseWrapper.getContentAsByteArray(),
-                response.getCharacterEncoding());
 
         log.info("STARTING PROCESSING : METHOD={}; REQUEST_URI={}; PARAMETERS={}; ", request.getMethod(), request.getRequestURI(), getParameters(request));
         log.info("FINISHED PROCESSING : RESPONSE CODE={}; ", response.getStatus());
 
         responseWrapper.copyBodyToResponse();
-    }
-
-    private String getStringValue(byte[] contentAsByteArray, String characterEncoding) {
-        try {
-            return new String(contentAsByteArray, 0, contentAsByteArray.length, characterEncoding);
-        } catch (UnsupportedEncodingException e) {
-            log.error(e);
-        }
-        return "";
     }
 
     private String getParameters(final HttpServletRequest request) {
