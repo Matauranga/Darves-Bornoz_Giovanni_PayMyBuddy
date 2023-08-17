@@ -37,8 +37,8 @@ public class TransferController {
      * @returnthe the transfer page
      */
     @GetMapping("/transfer")
-    public String transfer(Authentication authentication, Model model) {
-        int pages = 1;
+    public String transfer(Authentication authentication, Model model/*,@PathVariable(value = "pageNo") int pageNo*/) {
+        // int pages = 1;
 
         model.addAttribute("transferDTO", new TransferDTO());
 
@@ -46,14 +46,14 @@ public class TransferController {
         model.addAttribute("connections", person.getConnectionsList());
 
 
-      /*  Page<Transaction> page = transactionService.findPaginated(pages, 10);
-        List<Transaction> listEmployees = page.getContent();
+     /*   Page<Transaction> page = transactionService.findPaginated(pageNo, 1);
+        List<Transaction> listEmployees = page.getContent(); //TODO : a modifier car envoi TOUTES transactions en bdd
 
-        model.addAttribute("currentPage", pages);
+        model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
-        //model.addAttribute("transactionsList", listEmployees);*/
-
+        model.addAttribute("transactionsList", listEmployees);
+*/
 
         model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
 
@@ -111,7 +111,7 @@ public class TransferController {
 
             transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
             model.addAttribute("successTransfer", true);
-            return "transfer";
+
 
         } catch (NegativeBalanceAccount negativeBalanceAccount) {
             model.addAttribute("NotEnoughMoney", true);
@@ -124,7 +124,9 @@ public class TransferController {
             model.addAttribute("connections", person.getConnectionsList());
 
             model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
+
         }
+        return "transfer";
     }
 
 }

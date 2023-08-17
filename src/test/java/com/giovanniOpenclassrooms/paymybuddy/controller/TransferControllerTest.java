@@ -40,7 +40,7 @@ class TransferControllerTest {
     @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
     void addConnection() throws Exception {
         //Given an email for the connection to add
-        String friendEmail = "a@mail.fr";
+        String friendEmail = "baba@mail.fr";
 
         //When we initiate the request
         mockMvc.perform(post("/transfer/add-friend")
@@ -75,7 +75,7 @@ class TransferControllerTest {
     @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
     void sendMoney() throws Exception {
         //Given a DTO of a person who want to register
-        TransferDTO transferDTO = new TransferDTO("lu@mail.fr", new BigDecimal("10.0"), "YO");
+        TransferDTO transferDTO = new TransferDTO("jedi@mail.fr", new BigDecimal("10.0"), "YO");
 
         //When we initiate the request
         mockMvc.perform(post("/transfer/transfer-request")
@@ -93,7 +93,7 @@ class TransferControllerTest {
     @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
     void sendMoneyFailedNotMoney() throws Exception {
         //Given a DTO of a person who want to register
-        TransferDTO transferDTO = new TransferDTO("lu@mail.fr", new BigDecimal("1000.0"), "YO");
+        TransferDTO transferDTO = new TransferDTO("jedi@mail.fr", new BigDecimal("1000.0"), "YO");
 
         //When we initiate the request
         mockMvc.perform(post("/transfer/transfer-request")

@@ -1,7 +1,9 @@
 package com.giovanniOpenclassrooms.paymybuddy.business;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
+import com.giovanniOpenclassrooms.paymybuddy.DTO.UpdatePersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.AddConnectionFailedException;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.NotFoundException;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.PersonAlreadyExistsException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
@@ -96,48 +98,77 @@ public class PersonServiceImplTest {
         verify(personRepository, times(1)).save(any());
     }
 
- /*   @Disabled
+
     @DisplayName("Test to update a person")
     @Test
     void updatePerson() {//TODO a modifier quant la fonction update sera modifié
-        //Given an initial person to modify
+        //Given an initial person to modify and the updates
         Person person = PersonFaker.generate();
-        UUID uuidPerson = person.getPersonId();
-        String newEmail = "noiretrouge@email.com";
+        String authenticationEmail = person.getEmail();
 
-        UpdatePersonDTO personToModify = new UpdatePersonDTO("gio", "Adar", newEmail);
+        String newFirstname = "Crash";
+        String newLastname = "Bandicoot";
+        UpdatePersonDTO personToModify = new UpdatePersonDTO(newFirstname, newLastname);
 
         //When we try to update the person
-        when(personRepository.findById(any())).thenReturn(Optional.of(person));
-        personServiceImpl.updatePerson(uuidPerson, personToModify);
+        when(personRepository.existsByEmail(any())).thenReturn(true);
+        when(personRepository.findByEmail(any())).thenReturn(person);
+        personServiceImpl.updatePerson(authenticationEmail, personToModify);
 
         //Then we verify if this have works correctly
-        assertThat(person.getEmail()).isEqualTo(newEmail);
-        verify(personRepository, times(1)).findById(any());
+        assertThat(person.getFirstname()).isEqualTo(newFirstname);
+        assertThat(person.getLastname()).isEqualTo(newLastname);
+        verify(personRepository, times(1)).existsByEmail(any());
+        verify(personRepository, times(1)).findByEmail(any());
         verify(personRepository, times(1)).save(any());
-    }*/
+    }
 
-   /* @Disabled
+
     @DisplayName("Test to update a person not existing")
     @Test
     void updatePersonNotExisting() {
-        //Given an initial person to modify
+        //Given an initial person to modify and the updates
         Person person = PersonFaker.generate();
-        UUID uuidPerson = person.getPersonId();
-        String newEmail = "noiretrouge@email.com";
+        String authenticationEmail = person.getEmail();
 
-        UpdatePersonDTO personToModify = new UpdatePersonDTO("gio", "Mathy", newEmail);
+        String newFirstname = "Crash";
+        String newLastname = "Bandicoot";
+        UpdatePersonDTO personToModify = new UpdatePersonDTO(newFirstname, newLastname);
 
         //When we try to update the person
-
-        when(personRepository.findById(any())).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> personServiceImpl.updatePerson(uuidPerson, personToModify));
+        when(personRepository.existsByEmail(any())).thenReturn(false);
+        assertThrows(NotFoundException.class, () -> personServiceImpl.updatePerson(authenticationEmail, personToModify));
 
         //Then we verify if we search the person, but we don't save the changement
-        assertThat(person.getEmail()).isNotEqualTo(newEmail);
-        verify(personRepository, times(1)).findById(any());
+        assertThat(person.getFirstname()).isNotEqualTo(newFirstname);
+        assertThat(person.getLastname()).isNotEqualTo(newLastname);
+        verify(personRepository, times(1)).existsByEmail(any());
         verify(personRepository, times(0)).save(any());
-    }*/
+    }
+
+    @DisplayName("Test to update a person with blanks, proposition")
+    @Test
+    void updatePersonWithBlanksProposition() {
+        //Given an initial person to modify and the updates
+        Person person = PersonFaker.generate();
+        String authenticationEmail = person.getEmail();
+
+        String newFirstname = "";
+        String newLastname = "";
+        UpdatePersonDTO personToModify = new UpdatePersonDTO(newFirstname, newLastname);
+
+        //When we try to update the person
+        when(personRepository.existsByEmail(any())).thenReturn(true);
+        when(personRepository.findByEmail(any())).thenReturn(person);
+        personServiceImpl.updatePerson(authenticationEmail, personToModify);
+
+        //Then we verify if this have works correctly
+        assertThat(person.getFirstname()).isNotEqualTo(newFirstname);
+        assertThat(person.getLastname()).isNotEqualTo(newLastname);
+        verify(personRepository, times(1)).existsByEmail(any());
+        verify(personRepository, times(1)).findByEmail(any());
+        verify(personRepository, times(1)).save(any());
+    }
 
 
     @DisplayName("Test to delete a person")

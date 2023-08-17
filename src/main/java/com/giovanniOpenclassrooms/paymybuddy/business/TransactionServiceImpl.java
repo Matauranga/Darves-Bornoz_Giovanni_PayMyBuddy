@@ -38,12 +38,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     /**
-     *
      * @param pageNo
      * @param pageSize
      * @return
      */
-    public Page<Transaction> findPaginated(int pageNo, int pageSize) {
+    public Page<Transaction> findPaginated(int pageNo, int pageSize) { //TODO a supprimer si pas pagination
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         return this.transactionRepository.findAll(pageable);
