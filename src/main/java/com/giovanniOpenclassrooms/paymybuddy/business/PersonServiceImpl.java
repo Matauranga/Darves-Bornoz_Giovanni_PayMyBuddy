@@ -156,8 +156,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
-     * @param email
-     * @return
+     * @param email the email of the person who wants to acquire the information for the profile page
+     * @return all information we want to return to the front
      */
     public PersonInformationDTO getPersonInformationDTOFromEmail(String email) {
 

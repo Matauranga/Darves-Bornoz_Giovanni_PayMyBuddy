@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -152,19 +152,17 @@ public class TransactionServiceImplTest {
 
     @DisplayName("Try to proceed to an electronic transfer but don't find a person")//integration
     @Test
-    void transferElectronicMoneyFailedPersonNotFind() {
+    void transferElectronicMoneyFailedPersonNotFound() {
         //Given an initial money transfer with a debtor without money
-        Person debtor = PersonFaker.generate();
-        UUID debtorId = debtor.getPersonId();
-        debtor.setAmountBalance(new BigDecimal("0.0"));
-
-        Person creditor = PersonFaker.generate();
-        UUID creditorId = creditor.getPersonId();
-        creditor.setAmountBalance(new BigDecimal("50.0"));
+        UUID debtorId = UUID.randomUUID();
+        UUID creditorId = UUID.randomUUID();
 
         TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.0"), "Yo");
 
         //When we try to make the transfer
+        when(personRepository.findById(debtorId)).thenReturn(Optional.empty());
+        when(personRepository.findById(creditorId)).thenReturn(Optional.empty());
+
         assertThrows(NotFoundException.class, () -> {
             transactionServiceImpl.transferElectronicMoney(transactionDTO);
         });
@@ -173,8 +171,6 @@ public class TransactionServiceImplTest {
         verify(personRepository, times(1)).findById(any());
         verify(personRepository, times(0)).saveAll(any());
         verify(transactionRepository, times(0)).save(any());
-        assertThat(debtor.getAmountBalance()).isEqualTo(new BigDecimal("0.0"));
-        assertThat(creditor.getAmountBalance()).isEqualTo(new BigDecimal("50.0"));
     }
 
 }

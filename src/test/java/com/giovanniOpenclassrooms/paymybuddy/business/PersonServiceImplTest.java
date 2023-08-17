@@ -1,5 +1,6 @@
 package com.giovanniOpenclassrooms.paymybuddy.business;
 
+import com.giovanniOpenclassrooms.paymybuddy.DTO.PersonInformationDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.RegisterPersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.UpdatePersonDTO;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.AddConnectionFailedException;
@@ -289,8 +290,8 @@ public class PersonServiceImplTest {
         RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("Baba", "AuRhum", "2023-07-31", "g@mail.fr", "Aha");
 
         //When we try to save the person with an existing email
+        when(personRepository.existsByEmail(any())).thenReturn(true);
         assertThrows(PersonAlreadyExistsException.class, () -> {
-            when(personRepository.existsByEmail(any())).thenReturn(true);
             personServiceImpl.saveNewPersonFromDTO(registerPersonDTO);
         });
 
@@ -298,4 +299,42 @@ public class PersonServiceImplTest {
         verify(personRepository, times(0)).save(any());
     }
 
+    @DisplayName("Try to create a DTO to return person information")
+    @Test
+    void getPersonInformationDTOFromEmail() {
+        //Given initial person
+        Person person = PersonFaker.generate();
+        String personEmail = person.getEmail();
+        Person friend = PersonFaker.generate();
+        person.setConnectionsList(List.of(friend));
+
+        //When we try to create the DTO to return the good information
+        when(personRepository.existsByEmail(personEmail)).thenReturn(true);
+        when(personRepository.findByEmail(personEmail)).thenReturn(person);
+        PersonInformationDTO personInformationDTO = personServiceImpl.getPersonInformationDTOFromEmail(personEmail);
+
+        //Then we check that we haven't saved the person
+        assertThat(personInformationDTO.getEmail()).isEqualTo(personEmail);
+        assertThat(personInformationDTO.getBirthdate()).isEqualTo(person.getBirthdate());
+        verify(personRepository, times(1)).existsByEmail(any());
+        verify(personRepository, times(1)).findByEmail(any());
+    }
+
+    @DisplayName("Try to create a DTO to return person information, but failed because person doesn't exists")
+    @Test
+    void getPersonInformationDTOFromEmailFailed() {
+        //Given
+
+        //When we try to save the person with an existing email
+        when(personRepository.existsByEmail(any())).thenReturn(false);
+        when(personRepository.findByEmail(any())).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> {
+            personServiceImpl.getPersonInformationDTOFromEmail(any());
+        });
+
+        //Then we check that we haven't saved the person
+        verify(personRepository, times(1)).existsByEmail(any());
+        verify(personRepository, times(0)).findByEmail(any());
+    }
 }
