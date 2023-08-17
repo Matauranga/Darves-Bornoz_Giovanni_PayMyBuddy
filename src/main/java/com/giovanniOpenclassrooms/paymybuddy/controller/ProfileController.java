@@ -38,9 +38,10 @@ public class ProfileController {
     }
 
     /**
+     * Handler method to handle the profile edition
+     *
      * @param authentication  the parameter that contains information about the logged in person
-     * @param updatePersonDTO
-     * @param result
+     * @param updatePersonDTO The DTO wo contain the information to update
      * @param model           attribute to be passed to the front
      * @return the profile page
      */
