@@ -10,178 +10,136 @@
 <body>
 <div th:insert="~{/navbar :: topbar}"></div>
 
-
-<div class="container bootstrap snippets bootdey">
-    <h1 class="text-primary">Edit Profile</h1>
-    <div class="row">
-
-        <!-- left column -->
-        <div class="col-md-3">
+<div class="container mt-5">
+    <div class="row gutters">
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
             <div class="text-left">
-                <img width="200px" height="70px" th:src="@{/PayMyBuddyPicture.png}" alt="avatar"/>
+                <img width="240px" height="70px" th:src="@{/PayMyBuddyPicture.png}" alt="avatar"/>
             </div>
         </div>
 
-        <!-- edit form column -->
-        <div class="col-md-9 personal-info">
+        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+            <div class="card h-100">
+                <div class="card-body">
 
-            <h3>Personal info</h3>
+                    <form id="paymentForm" action="#" th:action="@{/profile/edit}" method="post"
+                          th:object="${UpdatePersonDTO}">
+                        <div class="row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <h6 class="mb-2 text-primary">Personal Information</h6>
+                            </div>
 
-            <!-- Edit profile -->
-            <div class="open-btn bg-light clearfix">
-                <h5 class="text-left">Send Money
-                    <button type="button" class="open-button btn btn-primary float-end" onclick="openForm()">
-                        Edit profile
-                    </button>
-                </h5>
-            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="firstname">Firstname</label>
+                                    <input type="text" class="form-control" id="firstname" th:field="*{firstname}"
+                                           th:placeholder="${personInformationDTO.getFirstname()}">
+                                </div>
+                            </div>
 
-            <div id="login-popup">
-                <div class="form-popup"
-                     id="popupForm"
-                     style=" display: none;
-                     position: fixed;
-                     left: 60%;
-                     top: 25%;
-                     transform: translate(-45%, 5%);
-                     border: 2px solid #666;
-                     z-index: 9;"
-                >
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="lastname">Lastname</label>
+                                    <input type="text" class="form-control" id="lastname" th:field="*{lastname}"
+                                           th:placeholder="${personInformationDTO.getLastname()}">
+                                </div>
+                            </div>
 
-                    <form method="POST"
-                          class="form-container"
-                          th:action="@{/profile/edit}"
-                          th:object="${UpdatePersonDTO}"
-                          style=" width: 400px;padding: 20px;background-color: #fff;"
-                    >
-                        <span>Change profile settings, if you don't write anything, no changes will apply</span>
-                        <div class="my-4">
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    name="firstname"
-                                    placeholder="Firstname"
-                                    th:field="*{firstname}"
-                                    style="font-family:Arial, FontAwesome"
-                                    id="firstname" maxlength="30"
-                            />
-                        </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="eMail">Email</label>
+                                    <input type="email" class="form-control" id="eMail" th:field="*{email}"
+                                           th:placeholder="${personInformationDTO.getEmail()}" disabled>
+                                </div>
+                            </div>
 
-                        <div class="my-4">
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    name="lastname"
-                                    placeholder="Lastname"
-                                    th:field="*{lastname}"
-                                    style="font-family:Arial, FontAwesome"
-                                    id="lastname" maxlength="30"
-                            />
-                        </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="birthdate">Birthdate:</label>
+                                    <input type="text" name="birthdate" class="form-control" id="birthdate"
+                                           th:field="*{birthdate}"
+                                           th:placeholder="${personInformationDTO.getBirthdate()}">
+                                </div>
+                            </div>
 
-                        <div class="text-center my-3">
-                            <button type="submit" class="btn btn-primary" value="saveModification">Save</button>
-                            <button type="button" class="btn btn-danger cancel " onclick="closeForm()">Fermer</button>
+                            <!--                               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="oldPassword">Old Password</label>
+                                                                    <input type="password" name="oldPassword" class="form-control" id="oldPassword"
+                                                                           th:field="*{oldPassword}" th:value="${personInformationDTO.getPassword()}">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="newPassword">New Password</label>
+                                                                    <input type="password" name="newPassword" class="form-control" id="newPassword"
+                                                                           th:field="*{newPassword}" th:value="${personInformationDTO.getPassword()}">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+ -->
+                            <div class="row gutters mt-2">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="text-end">
+                                        <button type="submit" id="submit" name="submit" class="btn btn-primary">Update
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </form>
+
+                    <form id="friend" action="#" th:action="@{/profile/editFriend}" method="post">
+                        <div class="form-group mt-3">
+                            <label class="col-lg-3 control-label">friends list:</label>
+
+                            <select class="form-control"
+                                    name="emailFriendToDelete"
+
+                                    id=" emailFriendToDelete" required>
+                                <!-- th:field="*{emailFriendToDelete}" "-->
+
+                                <option
+                                        th:each="friend : ${personInformationDTO.getFriendsList()}"
+                                        th:value="${friend.getEmail()}"
+                                        th:text="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
+                                >
+                                </option>
+                            </select>
+
+                            <div class="row gutters mt-2">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="text-end">
+                                        <button type="submit" id="deleteFriend" name="submit" class="btn btn-warning">
+                                            Delete Friend
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+
+                    <div class="row gutters mt-2">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="text-center">
+                                <button type="submit" id="deleteAccount" name="submit" class="btn btn-danger">
+                                    Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
-
-
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Firstname:</label>
-                <div class="form-control col-lg-8"
-                     th:text="${personInformationDTO.getFirstname()}">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Lastname:</label>
-                <div class="form-control col-lg-8"
-                     th:text="${personInformationDTO.getLastname()}">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Birthdate:</label>
-                <div class="form-control col-lg-8"
-                     th:text="${personInformationDTO.getBirthdate()}">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Email:</label>
-                <div class="form-control col-lg-8"
-                     th:text="${personInformationDTO.getEmail()}">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Account balance:</label>
-                <div class="form-control col-lg-8"
-                     th:text="${personInformationDTO.getAccountBalance()}">
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label class="col-lg-3 control-label">friends list:</label>
-
-                <select class="form-control"
-                        name="connection"
-                        id="connection" required>
-                    <!--  th:field="*{creditorEmail}"-->
-
-                    <option
-                            th:each="friend : ${personInformationDTO.getFriendsList()}"
-                            th:value="${friend}"
-                            th:text="${friend}"
-                    >
-                    </option>
-                </select>
-
-                <div class="table-responsive">
-                    <table
-                            class="table table-striped table-hover table-bordered mt-2"
-                            id="transactionTable">
-                        <thead>
-                        <label class="col-lg-5 control-label">Transaction with friend selected:</label>
-                        <tr class="bg-success text-white">
-                            <th>Connection</th>
-                            <th>Date</th>
-                            <th>Description</th>
-                            <th>Amount</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="transaction: ${transactionsList}">
-                            <td th:text="${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()}"></td>
-                            <td th:text="${transaction.getOperationDate()}"></td>
-                            <td th:text="${transaction.getDescription()}"></td>
-                            <td th:text="${transaction.getTransferAmount()+'€'}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
         </div>
     </div>
 </div>
-
-
-<script>
-
-      function openForm() {
-        document.getElementById("popupForm").style.display = "block";
-      }
-
-      function closeForm() {
-        document.getElementById("popupForm").style.display = "none";
-      }
-
-</script>
 
 </body>
 </html>

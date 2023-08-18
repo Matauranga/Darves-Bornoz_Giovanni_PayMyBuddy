@@ -64,5 +64,28 @@ public class ProfileController {
 
     }
 
+    /**
+     * @param authentication      the parameter that contains information about the logged in person
+     * @param emailFriendToDelete the email of the person to delete of the connection list
+     * @param model               attribute to be passed to the front
+     * @return the profile page
+     */
+    @PostMapping("/profile/editFriend")
+    public String editFriendList(Authentication authentication, String emailFriendToDelete, Model model) {
 
+        try {
+
+            personService.removeConnection(personService.getPersonByEmail(authentication.getName()), personService.getPersonByEmail(emailFriendToDelete));
+
+        } catch (Exception ignored) {
+
+        } finally {
+            PersonInformationDTO personInformationDTO = personService.getPersonInformationDTOFromEmail(authentication.getName());
+            model.addAttribute("personInformationDTO", personInformationDTO);
+            model.addAttribute("UpdatePersonDTO", new UpdatePersonDTO());
+        }
+
+        return "profile";
+
+    }
 }

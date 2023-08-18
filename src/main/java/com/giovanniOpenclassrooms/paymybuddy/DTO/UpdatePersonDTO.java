@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,6 +14,10 @@ import lombok.Setter;
 public class UpdatePersonDTO {
     String firstname;
     String lastname;
+    String email;
+    LocalDate birthdate;
+    String oldPassword;
+    String newPassword;
 }
 
 
