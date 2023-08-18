@@ -24,6 +24,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private PersonService personService; //TODO impl ou interface
 
     @Autowired
     private PersonRepository personRepository;
@@ -107,6 +109,34 @@ public class TransactionServiceImpl implements TransactionService {
         return this.personRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Person not found"));
+    }
+
+
+    /**
+     * @param email
+     * @param debitAmount
+     */
+    @Transactional
+    public void transferMoneyFromPMBAccountToExternAccount(String email, BigDecimal debitAmount) {
+
+        final Person person = personService.getPersonByEmail(email);
+
+        person.debitBalance(debitAmount);
+        personRepository.save(person);
+
+    }
+
+    /**
+     * @param email
+     * @param creditAmount
+     */
+    @Transactional
+    public void transferMoneyFromExternAccountToPMBAccount(String email, BigDecimal creditAmount) {
+
+        final Person person = personService.getPersonByEmail(email);
+
+        person.creditBalance(creditAmount);
+        personRepository.save(person);
     }
 
 }

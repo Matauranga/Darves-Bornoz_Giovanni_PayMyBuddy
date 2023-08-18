@@ -23,7 +23,7 @@
 
     <div th:if="${successTransfer}">
         <div class="alert alert-info">
-            Congrats you have lost money!
+            Congratulations your transfer works!
         </div>
     </div>
 
@@ -47,6 +47,8 @@
 
 
     <!-- Ajout connection -->
+
+
     <div class="open-btn bg-light clearfix">
         <h5 class="text-left">Send Money
             <button type="button" class="open-button btn btn-primary float-end" onclick="openForm()">
@@ -94,70 +96,118 @@
 
     <!-- Preparation de transfert + submit-->
 
-    <div class="">
 
-        <div style="display: block;background-color: #eeeeee;padding:1em;">
+    <div style="display: block;background-color: #eeeeee;padding:1em;">
 
-            <form
-                    method="POST"
-                    class="form-group"
-                    th:action="@{/transfer/transfer-request}"
-                    th:object="${transferDTO}"
+        <form
+                method="POST"
+                class="form-group"
+                th:action="@{/transfer/transfer-request}"
+                th:object="${transferDTO}"
 
-            >
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <select
-                                class="custom-select"
-                                name="connection"
-                                th:field="*{creditorEmail}"
-                                id="connection" required
+        >
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <select
+                            class="custom-select"
+                            name="connection"
+                            th:field="*{creditorEmail}"
+                            id="connection" required
+                    >
+                        <option value="" selected hidden>Select A Connection</option>
+                        <option
+                                th:each="friend : ${connections}"
+                                th:value="${friend.getEmail()}"
+                                th:text="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
                         >
-                            <option value="" selected hidden>Select A Connection</option>
-                            <option
-                                    th:each="friend : ${connections}"
-                                    th:value="${friend.getEmail()}"
-                                    th:text="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
-                            >
-                            </option>
-                        </select>
+                        </option>
+                    </select>
 
-                    </div>
-                    <div class="col-md-2">
-                        <input
-                                type="number"
-                                class="form-control"
-                                name="amount"
-                                placeholder=" 0€"
-                                th:field="*{amount}"
-                                min="1"
-                                step=".01"
-                                id="amount" required>
-                    </div>
-                    <div class="col-md-3">
-                        <input
-
-                                type="text"
-                                class="form-control"
-                                name="description"
-                                placeholder="Description"
-                                th:field="*{description}"
-                                id="description">
-                    </div>
-                    <div class="col-md-2">
-                        <button
-                                type="submit"
-                                class="btn btn-success"
-                                name="transfer"
-                                value="Transfer"
-                        >
-                            Pay
-                        </button>
-                    </div>
                 </div>
+                <div class="col-md-2">
+                    <input
+                            type="number"
+                            class="form-control"
+                            name="amount"
+                            placeholder=" 0€"
+                            th:field="*{amount}"
+                            min="1"
+                            step=".01"
+                            id="amount" required>
+                </div>
+                <div class="col-md-3">
+                    <input
+
+                            type="text"
+                            class="form-control"
+                            name="description"
+                            placeholder="Description"
+                            th:field="*{description}"
+                            id="description">
+                </div>
+                <div class="col-md-2">
+                    <button
+                            type="submit"
+                            class="btn btn-success"
+                            name="transfer"
+                            value="Transfer"
+                    >
+                        Pay
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+
+        <!-- Block sur charger sur compte et montant actuel -->
+
+
+        <div class="row">
+            <h5 class="text-left mt-5">Credit or debit your Pay my buddy account</h5>
+            <form class="col"
+                  th:action="@{/transfer/credit-account}"
+                  method="POST"
+            >
+                <input class="col"
+                       type="number"
+                       name="creditAmount"
+                       placeholder=" 0€"
+                       min="1"
+                       step=".01"
+                       id="creditAmount" required>
+                <button
+                        type="submit"
+                        class="btn btn-success col-mb-2"
+                        value="creditTransfer"
+                >
+                    Credit account
+                </button>
+            </form>
+
+            <form class="col"
+                  th:action="@{/transfer/debit-account}"
+                  method="POST"
+            >
+                <input class="col"
+                       type="number"
+                       name="debitAmount"
+                       placeholder=" 0€"
+                       min="1"
+                       step=".01"
+                       id="debitAmount" required>
+
+                <button
+                        type="submit"
+                        class="btn btn-danger col-mb-2"
+                        value="debitTransfer"
+                >
+                    Debit account
+                </button>
 
             </form>
         </div>
+
 
         <!-- block sur historique de transfert -->
 
@@ -209,7 +259,7 @@
                         </div>
                     </div>
                 </div>
--->
+    -->
                 <!--
                                 <div th:if="${totalPages > 1}">
 
@@ -244,12 +294,11 @@
 
                 -->
             </div>
-
         </div>
-
     </div>
 
 </div>
+
 
 <script>
 
@@ -260,7 +309,6 @@
       function closeForm() {
         document.getElementById("popupForm").style.display = "none";
       }
-
 </script>
 
 </body>

@@ -94,6 +94,56 @@ public class TransferController {
     }
 
 
+    @PostMapping("/transfer/credit-account")
+    public String creditMoneyOnPMBAccount(Authentication authentication, TransferDTO transferDTO, BigDecimal creditAmount, Model model) {
+
+        try {
+
+            transactionService.transferMoneyFromExternAccountToPMBAccount(authentication.getName(), creditAmount);
+            model.addAttribute("successTransfer", true);
+
+        } catch (Exception exception) {
+            model.addAttribute("transferFailed", exception.getMessage());
+
+            return "transfer";
+
+        } finally {
+            Person person = personService.getPersonByEmail(authentication.getName());
+            model.addAttribute("connections", person.getConnectionsList());
+            model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
+
+        }
+        return "transfer";
+    }
+
+
+    @PostMapping("/transfer/debit-account")
+    public String debitMoneyFromPMBAccount(Authentication authentication, TransferDTO transferDTO, BigDecimal debitAmount, Model model) {
+
+        try {
+            transactionService.transferMoneyFromPMBAccountToExternAccount(authentication.getName(), debitAmount);
+            model.addAttribute("successTransfer", true);
+
+        } catch (NegativeBalanceAccount negativeBalanceAccount) {
+            model.addAttribute("NotEnoughMoney", true);
+
+            return "transfer";
+
+        } catch (Exception exception) {
+            model.addAttribute("transferFailed", exception.getMessage());
+
+            return "transfer";
+
+        } finally {
+            Person person = personService.getPersonByEmail(authentication.getName());
+            model.addAttribute("connections", person.getConnectionsList());
+            model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
+
+        }
+        return "transfer";
+    }
+
+
     /**
      * Handler method to handle a transfer request between two persons
      *

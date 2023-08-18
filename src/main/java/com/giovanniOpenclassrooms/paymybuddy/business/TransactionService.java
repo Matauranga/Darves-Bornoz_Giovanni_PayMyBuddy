@@ -5,6 +5,7 @@ import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,10 @@ public interface TransactionService {
     List<Transaction> getTransactionsByPerson(Person person);
 
     void transferElectronicMoney(TransactionDTO transactionDTO);
+
+    void transferMoneyFromPMBAccountToExternAccount(String email, BigDecimal debitAmount);
+
+    void transferMoneyFromExternAccountToPMBAccount(String email, BigDecimal creditAmount);
 
     Page<Transaction> findPaginated(int pageNo, int pageSize);
 

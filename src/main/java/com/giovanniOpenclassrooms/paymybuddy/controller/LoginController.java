@@ -23,9 +23,18 @@ public class LoginController {
      *
      * @return the login page
      */
-    @GetMapping({"/", "/login"})
-    public String login() {
+    @GetMapping({"/", "/login"})    public String login() {
         return "login";
+    }
+
+    /**
+     * Handler method to handle error request
+     *
+     * @return the login page
+     */
+    @GetMapping("/error")
+    public String error() {
+        return "redirect:/login";
     }
 
 

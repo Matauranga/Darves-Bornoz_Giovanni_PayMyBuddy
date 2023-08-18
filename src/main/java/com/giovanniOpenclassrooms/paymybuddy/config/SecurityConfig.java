@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 //   .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.NEVER))
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/sign-up/**", "/transfer/**", "/actuator/**", "/profile/**", "/home/**").permitAll()
+                        authorize.requestMatchers("/sign-up/**", "/transfer/**", "/actuator/**", "/profile/**", "/home/**","/error/**").permitAll()
                                 .requestMatchers(toH2Console()).permitAll()
                                 .anyRequest().authenticated()
                 )
