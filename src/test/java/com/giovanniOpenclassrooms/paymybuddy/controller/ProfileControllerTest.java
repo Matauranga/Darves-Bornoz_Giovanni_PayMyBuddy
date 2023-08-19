@@ -36,7 +36,6 @@ class ProfileControllerTest {
     @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
     void editProfileInformation() throws Exception {
         UpdatePersonDTO updatePersonDTO = new UpdatePersonDTO();
-        ;
         updatePersonDTO.setFirstname("Tata");
         updatePersonDTO.setLastname("Yoyo");
 
@@ -50,4 +49,35 @@ class ProfileControllerTest {
                 .andExpect(content().string(containsString("Tata")));
     }
 
+    @DisplayName("Test to delete friend")
+    @Test
+    @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
+    void editFriendList() throws Exception {
+        //Given initial friend email to delete
+        String emailFriendToDelete = "jedi@mail.fr";
+
+        //When we initiate the request
+        mockMvc.perform(post("/profile/editFriend")
+                        .flashAttr("savePersonFromProfile", emailFriendToDelete))
+                .andDo(MockMvcResultHandlers.print())
+
+                //Then we verify is all works correctly
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("Test to delete friend")
+    @Test
+    @WithMockUser(username = "baba@mail.fr", password = "$2a$10$3GusYEcweJL1DdndZgPFkOAP7ItDMYPug57mxd6hWuDf/Nxn9OTta")
+    void deleteAccount() throws Exception {
+        //Given initial person email to delete
+
+        //When we initiate the request
+        mockMvc.perform(post("/delete"))
+
+                .andDo(MockMvcResultHandlers.print())
+                //Then we verify is all works correctly
+                .andExpect(status().isFound());
+
+
+    }
 }

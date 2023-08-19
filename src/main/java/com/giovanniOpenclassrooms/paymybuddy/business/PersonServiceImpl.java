@@ -171,7 +171,6 @@ public class PersonServiceImpl implements PersonService {
         personInformationDTO.setEmail(person.getEmail());
         personInformationDTO.setBirthdate(person.getBirthdate());
         personInformationDTO.setAccountBalance(person.getAmountBalance());
-        //personInformationDTO.setFriendsList(person.getConnectionsList().stream().map(p -> p.getFirstname() + " " + p.getLastname()).toList());
         personInformationDTO.setFriendsList(person.getConnectionsList());
 
         return personInformationDTO;

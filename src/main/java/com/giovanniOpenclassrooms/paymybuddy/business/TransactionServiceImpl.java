@@ -101,8 +101,8 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     /**
-     * @param email
-     * @param debitAmount
+     * @param email       the email of the person who want to take off his money
+     * @param debitAmount The amount to take off at the account
      */
     @Transactional
     public void transferMoneyFromPMBAccountToExternAccount(String email, BigDecimal debitAmount) {
@@ -115,8 +115,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     /**
-     * @param email
-     * @param creditAmount
+     * @param email        the email of the person who want to add some money on his account
+     * @param creditAmount The amount to add at the account
      */
     @Transactional
     public void transferMoneyFromExternAccountToPMBAccount(String email, BigDecimal creditAmount) {

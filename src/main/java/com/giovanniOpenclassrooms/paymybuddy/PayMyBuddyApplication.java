@@ -13,14 +13,11 @@ public class PayMyBuddyApplication {
 
 
 /* TODO:
-        Créer page Home "page d'aide"
-        gérer deco auto avec securityconfig
         gérer les taxes sur transaction
-        gérer relation avec compte externe
-        gérer transaction dans profile
+
         revoir le digramme
         faire les script sql
         faire les livrables
-        changer ordre des transactions dans la liste affichée
-        + pagination si possible
+
+        ??? gérer relation avec compte externe ???
  */

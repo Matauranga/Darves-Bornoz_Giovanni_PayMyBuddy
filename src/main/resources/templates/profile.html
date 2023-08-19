@@ -58,28 +58,29 @@
                                     <label for="birthdate">Birthdate:</label>
                                     <input type="text" name="birthdate" class="form-control" id="birthdate"
                                            th:field="*{birthdate}"
-                                           th:placeholder="${personInformationDTO.getBirthdate()}">
+                                           th:placeholder="${personInformationDTO.getBirthdate()}" disabled>
                                 </div>
                             </div>
 
-                            <!--                               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="oldPassword">Old Password</label>
-                                                                    <input type="password" name="oldPassword" class="form-control" id="oldPassword"
-                                                                           th:field="*{oldPassword}" th:value="${personInformationDTO.getPassword()}">
-                                                                </div>
-                                                            </div>
+                            <!--
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="oldPassword">Old Password</label>
+                                    <input type="password" name="oldPassword" class="form-control" id="oldPassword"
+                                           th:field="*{oldPassword}" th:value="${personInformationDTO.getPassword()}">
+                                </div>
+                            </div>
 
-                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="newPassword">New Password</label>
-                                                                    <input type="password" name="newPassword" class="form-control" id="newPassword"
-                                                                           th:field="*{newPassword}" th:value="${personInformationDTO.getPassword()}">
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="newPassword">New Password</label>
+                                    <input type="password" name="newPassword" class="form-control" id="newPassword"
+                                           th:field="*{newPassword}" th:value="${personInformationDTO.getPassword()}">
+                                </div>
+                            </div>
+                        </div>
+                        -->
 
- -->
                             <div class="row gutters mt-2">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="text-end">
@@ -88,28 +89,19 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </form>
 
                     <form id="friend" action="#" th:action="@{/profile/editFriend}" method="post">
                         <div class="form-group mt-3">
                             <label class="col-lg-3 control-label">friends list:</label>
-
-                            <select class="form-control"
-                                    name="emailFriendToDelete"
-
-                                    id=" emailFriendToDelete" required>
-                                <!-- th:field="*{emailFriendToDelete}" "-->
-
-                                <option
-                                        th:each="friend : ${personInformationDTO.getFriendsList()}"
+                            <select class="form-control" name="emailFriendToDelete" id=" emailFriendToDelete" required>
+                                <option th:each="friend : ${personInformationDTO.getFriendsList()}"
                                         th:value="${friend.getEmail()}"
                                         th:text="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
                                 >
                                 </option>
                             </select>
-
                             <div class="row gutters mt-2">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="text-end">
@@ -119,7 +111,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </form>
 
@@ -127,9 +118,34 @@
                     <div class="row gutters mt-2">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="text-center">
-                                <button type="submit" id="deleteAccount" name="submit" class="btn btn-danger">
+                                <button type="button" id="deleteAccount" name="submit" class="btn btn-danger"
+                                        data-toggle="modal" data-target="#delete">
                                     Delete Account
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Account</h5>
+                                    <button type="button" class="btn-close" data-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-container" th:action="@{/delete}" method="POST">
+                                        <div class="mb-3 text-center">Are you sure ?
+                                            <div>
+                                                <button type="submit" class="btn btn-danger mt-3">Confirm
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -140,6 +156,9 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> <!-- TODO -->
 
 </body>
 </html>

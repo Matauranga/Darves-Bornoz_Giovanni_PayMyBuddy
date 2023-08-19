@@ -20,7 +20,7 @@
             th:object="${person}"
     >
         <div class="text-center my-4">
-            <a class="btn btn-lg btn-success" href="login.html">Pay My Buddy</a>
+            <a class="btn btn-lg btn-success" href="login">Pay My Buddy</a>
         </div>
 
         <div th:if="${success}">
@@ -129,7 +129,7 @@
         <div class="text-center my-3">
             <button type="submit" class="btn btn-primary btn-block">Sign in</button>
 
-            <p class="text-center ">Already registered ? <a th:href="@{/login}">Login here</a></p>
+            <p class="text-center mt-1">Already registered ? <a th:href="@{/login}">Login here</a></p>
         </div>
 
     </form>

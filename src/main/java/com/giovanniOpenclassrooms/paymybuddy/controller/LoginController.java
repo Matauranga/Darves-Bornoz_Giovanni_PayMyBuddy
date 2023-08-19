@@ -23,7 +23,8 @@ public class LoginController {
      *
      * @return the login page
      */
-    @GetMapping({"/", "/login"})    public String login() {
+    @GetMapping({"/", "/login"})
+    public String login() {
         return "login";
     }
 
@@ -32,7 +33,7 @@ public class LoginController {
      *
      * @return the login page
      */
-    @GetMapping("/error")
+    @GetMapping("/error") //TODO marche pas
     public String error() {
         return "redirect:/login";
     }

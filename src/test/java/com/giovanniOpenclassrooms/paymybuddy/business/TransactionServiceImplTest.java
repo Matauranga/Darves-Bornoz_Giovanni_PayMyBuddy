@@ -32,6 +32,8 @@ public class TransactionServiceImplTest {
     TransactionRepository transactionRepository;
     @Mock
     PersonRepository personRepository;
+    @Mock
+    PersonService personService;
 
     @DisplayName("Try to get all transactions")
     @Test
@@ -69,7 +71,7 @@ public class TransactionServiceImplTest {
 
     @DisplayName("Try to get all transactions for a person")
     @Test
-    void getTransactionsByPerson() { //TODO : changer transaction2 les 2 UUID si on récupère tout, sinon laisser comme ça
+    void getTransactionsByPerson() {
         //Given initial list of transactions and the corresponding persons
         Person person1 = PersonFaker.generate();
         UUID uuidPerson1 = person1.getPersonId();
@@ -78,7 +80,7 @@ public class TransactionServiceImplTest {
         UUID uuidPerson3 = UUID.randomUUID();
 
         Transaction transaction1 = new Transaction(uuidPerson1, uuidPerson2, null, null);
-        Transaction transaction2 = new Transaction(uuidPerson1, uuidPerson3, null, null);
+        Transaction transaction2 = new Transaction(uuidPerson3, uuidPerson1, null, null);
         Transaction transaction3 = new Transaction(uuidPerson2, uuidPerson3, null, null);
 
         List<Transaction> transactions = List.of(transaction1, transaction2, transaction3);
@@ -148,7 +150,7 @@ public class TransactionServiceImplTest {
     }
 
 
-    @DisplayName("Try to proceed to an electronic transfer but don't find a person")//integration
+    @DisplayName("Try to proceed to an electronic transfer but don't find a person")
     @Test
     void transferElectronicMoneyFailedPersonNotFound() {
         //Given an initial money transfer with a debtor without money
@@ -169,4 +171,86 @@ public class TransactionServiceImplTest {
         verify(transactionRepository, times(0)).save(any());
     }
 
+    @DisplayName("Proceed to an electronic transfer to take off a account")
+    @Test
+    void transferMoneyFromPMBAccountToExternAccount() {
+        //Given an initial money transfer with a debtor without money
+        Person person = PersonFaker.generate();
+        person.setAmountBalance(new BigDecimal("50.0"));
+        BigDecimal amount = new BigDecimal("50.0");
+
+        //When we try to make the transfer
+        when(personService.getPersonByEmail(any())).thenReturn(person);
+        transactionServiceImpl.transferMoneyFromPMBAccountToExternAccount(person.getEmail(), amount);
+
+        //Then we verify if the transfer don't work
+        assertThat(person.getAmountBalance()).isEqualTo(new BigDecimal("0.0"));
+        verify(personService, times(1)).getPersonByEmail(any());
+        verify(personRepository, times(1)).save(any());
+
+
+    }
+
+    @DisplayName("Proceed to an electronic transfer to take off a account, but failed because not enough money")
+    @Test
+    void transferMoneyFromPMAccountToExternAccountFailedBecauseOfNotEnoughMoney() {
+        //Given an initial person and an amount to transfer
+        Person person = PersonFaker.generate();
+        person.setAmountBalance(new BigDecimal("10.0"));
+        BigDecimal amount = new BigDecimal("50.0");
+
+        //When we try to make the transfer
+        when(personService.getPersonByEmail(any())).thenReturn(person);
+        assertThrows(NegativeBalanceAccount.class, () -> transactionServiceImpl.transferMoneyFromPMBAccountToExternAccount(person.getEmail(), amount));
+
+
+        //Then we verify if the transfer don't work
+        assertThat(person.getAmountBalance()).isEqualTo(new BigDecimal("10.0"));
+        verify(personService, times(1)).getPersonByEmail(any());
+        verify(personRepository, times(0)).save(any());
+
+
+    }
+
+    @DisplayName("Proceed to an electronic transfer to fill a account")
+    @Test
+    void transferMoneyFromExternAccountToPMBAccount() {
+        //Given an initial person and an amount to transfer
+        Person person = PersonFaker.generate();
+        person.setAmountBalance(new BigDecimal("0.0"));
+        BigDecimal amount = new BigDecimal("50.0");
+
+        //When we try to make the transfer
+        when(personService.getPersonByEmail(any())).thenReturn(person);
+        transactionServiceImpl.transferMoneyFromExternAccountToPMBAccount(person.getEmail(), amount);
+
+        //Then we verify if the transfer don't work
+        assertThat(person.getAmountBalance()).isEqualTo(amount);
+        verify(personService, times(1)).getPersonByEmail(any());
+        verify(personRepository, times(1)).save(any());
+
+    }
+/*
+    @Disabled
+    @DisplayName("Get all transaction sort by date and pagined")//todo pas compris
+    @Test
+    void getPagedTransactionsByPersonSortByMostRecentDate() {
+        //Given an initial person list of trasnfer
+        Person person = PersonFaker.generate();
+        Transaction transaction1 = TransactionFaker.generate();
+        Transaction transaction2 = TransactionFaker.generate();
+        transaction1.setDebtor(person);
+        transaction2.setCreditor(person);
+
+        Page<Transaction> transactions = (Page<Transaction>) List.of(transaction1, transaction2);
+
+        //When we try to get the trasnfer list
+        when(transactionRepository.findAllByCreditorOrDebtorOrderByOperationDateDesc(any(), any(), any())).thenReturn(transactions);
+        transactionServiceImpl.getPagedTransactionsByPersonSortByMostRecentDate(person, PageRequest.of(2 - 1, 1));
+
+        //Then we verify if the transfer don't work
+        verify(transactionServiceImpl, times(1)).getPagedTransactionsByPersonSortByMostRecentDate(any(), any());
+
+
+    }*/
 }

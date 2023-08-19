@@ -18,6 +18,9 @@ public class ProfileController {
     @Autowired
     private PersonService personService;
 
+    @Autowired
+    private LoginController loginController;
+
 
     /**
      * Handler method to handle profile request
@@ -27,11 +30,11 @@ public class ProfileController {
      * @return the profile page
      */
     @GetMapping("/profile")
-    public String profile(Authentication authentication, Model model) {
-
-        model.addAttribute("UpdatePersonDTO", new UpdatePersonDTO());
+    public String getProfile(Authentication authentication, Model model) {
 
         PersonInformationDTO personInformationDTO = personService.getPersonInformationDTOFromEmail(authentication.getName());
+
+        model.addAttribute("UpdatePersonDTO", new UpdatePersonDTO());
         model.addAttribute("personInformationDTO", personInformationDTO);
 
         return "profile";
@@ -55,9 +58,7 @@ public class ProfileController {
         } catch (Exception ignored) {
 
         } finally {
-            PersonInformationDTO personInformationDTO = personService.getPersonInformationDTOFromEmail(authentication.getName());
-            model.addAttribute("personInformationDTO", personInformationDTO);
-            model.addAttribute("UpdatePersonDTO", new UpdatePersonDTO());
+            getProfile(authentication, model);
         }
 
         return "profile";
@@ -80,12 +81,30 @@ public class ProfileController {
         } catch (Exception ignored) {
 
         } finally {
-            PersonInformationDTO personInformationDTO = personService.getPersonInformationDTOFromEmail(authentication.getName());
-            model.addAttribute("personInformationDTO", personInformationDTO);
-            model.addAttribute("UpdatePersonDTO", new UpdatePersonDTO());
+            getProfile(authentication, model);
         }
 
         return "profile";
+    }
 
+    /**
+     * @param authentication
+     * @param model
+     * @return
+     */
+    @PostMapping("/delete")
+    public String deleteAccount(Authentication authentication, Model model) { //TODO pourquoi ça ne marche pas sur un des compte crée dans data.sql
+
+        try {
+
+            personService.deletePerson(personService.getPersonByEmail(authentication.getName()));
+
+        } catch (Exception ignored) {
+
+        } finally {
+            loginController.login();
+        }
+
+        return "redirect:/login";
     }
 }
