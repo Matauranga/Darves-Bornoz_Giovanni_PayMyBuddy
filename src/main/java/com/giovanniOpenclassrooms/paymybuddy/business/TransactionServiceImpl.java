@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -37,17 +36,6 @@ public class TransactionServiceImpl implements TransactionService {
      */
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
-    }
-
-    /**
-     * @param pageNo
-     * @param pageSize
-     * @return
-     */
-    public Page<Transaction> findPaginated(int pageNo, int pageSize) { //TODO a supprimer si pas pagination
-
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.transactionRepository.findAll(pageable);
     }
 
     /**
@@ -137,6 +125,11 @@ public class TransactionServiceImpl implements TransactionService {
 
         person.creditBalance(creditAmount);
         personRepository.save(person);
+    }
+
+
+    public Page<Transaction> getPagedTransactionsByPersonSortByMostRecentDate(Person person, Pageable pageable) {
+        return this.transactionRepository.findAllByCreditorOrDebtorOrderByOperationDateDesc(person, person, pageable);
     }
 
 }

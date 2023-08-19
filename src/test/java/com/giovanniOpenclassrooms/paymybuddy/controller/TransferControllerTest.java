@@ -77,13 +77,13 @@ class TransferControllerTest {
         TransferDTO transferDTO = new TransferDTO("jedi@mail.fr", new BigDecimal("10.0"), "YO");
 
         //When we initiate the request
-        mockMvc.perform(post("/transfer/transfer-request")
+        mockMvc.perform(post("/transfer-request")
                         .flashAttr("transferDTO", transferDTO))
                 .andDo(MockMvcResultHandlers.print())
 
                 //Then we verify is all works correctly
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Congrats you have lost money!")));
+                .andExpect(content().string(containsString("Congratulations your transfer works!")));//TODO
 
     }
 
@@ -95,7 +95,7 @@ class TransferControllerTest {
         TransferDTO transferDTO = new TransferDTO("jedi@mail.fr", new BigDecimal("1000.0"), "YO");
 
         //When we initiate the request
-        mockMvc.perform(post("/transfer/transfer-request")
+        mockMvc.perform(post("/transfer-request")
                         .flashAttr("transferDTO", transferDTO))
                 .andDo(MockMvcResultHandlers.print())
 
@@ -113,7 +113,7 @@ class TransferControllerTest {
         TransferDTO transferDTO = new TransferDTO("aaa@mail.fr", new BigDecimal("10.0"), "YO");
 
         //When we initiate the request
-        mockMvc.perform(post("/transfer/transfer-request")
+        mockMvc.perform(post("/transfer-request")
                         .flashAttr("transferDTO", transferDTO))
                 .andDo(MockMvcResultHandlers.print())
 

@@ -6,14 +6,18 @@ import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
 import com.giovanniOpenclassrooms.paymybuddy.business.TransactionService;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccount;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
+import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 
@@ -37,26 +41,24 @@ public class TransferController {
      * @param model          attribute to be passed to the front
      * @return the transfer page
      */
-    @GetMapping("/transfer")
-    public String transfer(Authentication authentication, Model model/*,@PathVariable(value = "pageNo") int pageNo*/) {
-        // int pages = 1;
+    @GetMapping({"/transfer", "/transfer/**"})
+    public String getTransfer(Authentication authentication, Model model, @RequestParam(defaultValue = "1") int page) {
+        int size = 1;
+        Person connectedPerson = personService.getPersonByEmail(authentication.getName());
 
         model.addAttribute("transferDTO", new TransferDTO());
 
         Person person = personService.getPersonByEmail(authentication.getName());
         model.addAttribute("connections", person.getConnectionsList());
+        model.addAttribute("personBalance", connectedPerson.getAmountBalance());
 
 
-     /*   Page<Transaction> page = transactionService.findPaginated(pageNo, 1);
-        List<Transaction> listEmployees = page.getContent(); //TODO : a modifier car envoi TOUTES transactions en bdd
-
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("transactionsList", listEmployees);
-*/
-
-        model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
+        Page<Transaction> transactions = transactionService.getPagedTransactionsByPersonSortByMostRecentDate(connectedPerson, PageRequest.of(page - 1, size));
+        model.addAttribute("transactions", transactions.getContent());
+        model.addAttribute("currentPage", transactions.getNumber() + 1);
+        model.addAttribute("totalItems", transactions.getTotalElements());
+        model.addAttribute("totalPages", transactions.getTotalPages());
+        model.addAttribute("pageSize", size);
 
         return "transfer";
     }
@@ -70,7 +72,7 @@ public class TransferController {
      * @return the transfer page
      */
     @PostMapping("/transfer/add-friend")
-    public String addFriend(Authentication authentication, TransferDTO transferDTO, String friendEmail, Model model) {//TODO : pk DTO obligatoire ici ?
+    public String addFriend(Authentication authentication, String friendEmail, Model model) {
 
         try {
             personService.addConnection(
@@ -81,44 +83,35 @@ public class TransferController {
 
         } catch (Exception exception) {
             model.addAttribute("failedAddConnection", exception.getMessage());
-
             return "transfer";
 
         } finally {
-            Person person = personService.getPersonByEmail(authentication.getName());
-            model.addAttribute("connections", person.getConnectionsList());
-            model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
-
+            getTransfer(authentication, model, 1);
         }
         return "transfer";
     }
 
 
     @PostMapping("/transfer/credit-account")
-    public String creditMoneyOnPMBAccount(Authentication authentication, TransferDTO transferDTO, BigDecimal creditAmount, Model model) {
+    public String creditMoneyOnPMBAccount(Authentication authentication, BigDecimal creditAmount, Model model) {
 
         try {
-
             transactionService.transferMoneyFromExternAccountToPMBAccount(authentication.getName(), creditAmount);
             model.addAttribute("successTransfer", true);
 
         } catch (Exception exception) {
             model.addAttribute("transferFailed", exception.getMessage());
-
             return "transfer";
 
         } finally {
-            Person person = personService.getPersonByEmail(authentication.getName());
-            model.addAttribute("connections", person.getConnectionsList());
-            model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
-
+            getTransfer(authentication, model, 1);
         }
         return "transfer";
     }
 
 
     @PostMapping("/transfer/debit-account")
-    public String debitMoneyFromPMBAccount(Authentication authentication, TransferDTO transferDTO, BigDecimal debitAmount, Model model) {
+    public String debitMoneyFromPMBAccount(Authentication authentication, BigDecimal debitAmount, Model model) {
 
         try {
             transactionService.transferMoneyFromPMBAccountToExternAccount(authentication.getName(), debitAmount);
@@ -126,19 +119,14 @@ public class TransferController {
 
         } catch (NegativeBalanceAccount negativeBalanceAccount) {
             model.addAttribute("NotEnoughMoney", true);
-
             return "transfer";
 
         } catch (Exception exception) {
             model.addAttribute("transferFailed", exception.getMessage());
-
             return "transfer";
 
         } finally {
-            Person person = personService.getPersonByEmail(authentication.getName());
-            model.addAttribute("connections", person.getConnectionsList());
-            model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
-
+            getTransfer(authentication, model, 1);
         }
         return "transfer";
     }
@@ -151,7 +139,7 @@ public class TransferController {
      * @param transferDTO    DTO who will take information about the forwarded transfer
      * @return the transfer page
      */
-    @PostMapping("/transfer/transfer-request")
+    @PostMapping("/transfer-request")
     public String sendMoney(Authentication authentication, @ModelAttribute("transferDTO") TransferDTO transferDTO, Model model) {
 
         try {
@@ -161,8 +149,8 @@ public class TransferController {
             String description = transferDTO.getDescription();
 
             transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
-            model.addAttribute("successTransfer", true);
 
+            model.addAttribute("successTransfer", true);//TODO ???
 
         } catch (NegativeBalanceAccount negativeBalanceAccount) {
             model.addAttribute("NotEnoughMoney", true);
@@ -171,11 +159,7 @@ public class TransferController {
             model.addAttribute("transferFailed", true);
             return "transfer";
         } finally {
-            Person person = personService.getPersonByEmail(authentication.getName());
-            model.addAttribute("connections", person.getConnectionsList());
-
-            model.addAttribute("transactionsList", transactionService.getTransactionsByPerson(person));
-
+            getTransfer(authentication, model, 1);
         }
         return "transfer";
     }

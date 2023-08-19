@@ -109,7 +109,9 @@ public class PersonServiceImplTest {
 
         String newFirstname = "Crash";
         String newLastname = "Bandicoot";
-        UpdatePersonDTO personToModify = new UpdatePersonDTO(newFirstname, newLastname);
+        UpdatePersonDTO personToModify = new UpdatePersonDTO();
+        personToModify.setFirstname(newFirstname);
+        personToModify.setLastname(newLastname);
 
         //When we try to update the person
         when(personRepository.existsByEmail(any())).thenReturn(true);
@@ -134,7 +136,9 @@ public class PersonServiceImplTest {
 
         String newFirstname = "Crash";
         String newLastname = "Bandicoot";
-        UpdatePersonDTO personToModify = new UpdatePersonDTO(newFirstname, newLastname);
+        UpdatePersonDTO personToModify = new UpdatePersonDTO();
+        personToModify.setFirstname(newFirstname);
+        personToModify.setLastname(newLastname);
 
         //When we try to update the person
         when(personRepository.existsByEmail(any())).thenReturn(false);
@@ -156,7 +160,9 @@ public class PersonServiceImplTest {
 
         String newFirstname = "";
         String newLastname = "";
-        UpdatePersonDTO personToModify = new UpdatePersonDTO(newFirstname, newLastname);
+        UpdatePersonDTO personToModify = new UpdatePersonDTO();
+        personToModify.setFirstname(newFirstname);
+        personToModify.setLastname(newLastname);
 
         //When we try to update the person
         when(personRepository.existsByEmail(any())).thenReturn(true);

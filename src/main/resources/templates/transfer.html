@@ -4,17 +4,16 @@
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
     <title>Transfer</title>
 
 </head>
-
 <body>
 
 <div th:insert="~{/navbar :: topbar}"></div>
 
 <div style="margin: 100px 15%;">
 
+    <!-- Alert message  -->
     <div th:if="${successAddConnection}">
         <div class="alert alert-info">
             Congrats you have a new friend!
@@ -47,261 +46,184 @@
 
 
     <!-- Ajout connection -->
-
-
     <div class="open-btn bg-light clearfix">
         <h5 class="text-left">Send Money
-            <button type="button" class="open-button btn btn-primary float-end" onclick="openForm()">
+            <button type="button" class="open-button btn btn-primary float-end" data-toggle="modal"
+                    data-target="#exampleModal">
                 Add Connection
             </button>
         </h5>
+        <div th:text="'Account balance : ' + ${personBalance} + '€'">
+        </div>
     </div>
-    <div id="login-popup">
-        <div class="form-popup"
-             id="popupForm"
-             style=" display: none;
-                     position: fixed;
-                     left: 45%;
-                     top: 25%;
-                     transform: translate(-45%, 5%);
-                     border: 2px solid #666;
-                     z-index: 9;"
-        >
 
-            <form class="form-container"
-                  th:action="@{/transfer/add-friend}"
-                  method="POST"
-                  style=" width: 400px;
-                          padding: 20px;
-                          background-color: #fff;"
-            >
-                <h2>Add connection</h2>
-                <input
-                        type="email"
-                        class="form-control"
-                        name="friendEmail"
-                        placeholder="Add connection (Ex: mail@mail.com)"
-                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                        id="friendEmail" required
-                >
 
-                <div class="text-center my-3">
-                    <button type="submit" class="btn btn-primary" value="saveModification">Save</button>
-                    <button type="button" class="btn btn-danger cancel " onclick="closeForm()">Fermer</button>
+    <!-- modal add friend-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add connection</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </form>
+                <div class="modal-body">
+                    <form class="form-container" th:action="@{/transfer/add-friend}" method="POST">
+                        <div class="mb-3">
+                            <input type="email" class="form-control" name="friendEmail" id="friendEmail"
+                                   placeholder="Add connection (Ex: mail@mail.com)" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
 
     <!-- Preparation de transfert + submit-->
-
-
     <div style="display: block;background-color: #eeeeee;padding:1em;">
-
-        <form
-                method="POST"
-                class="form-group"
-                th:action="@{/transfer/transfer-request}"
-                th:object="${transferDTO}"
-
-        >
+        <form id="transferDTO" action="#" th:action="@{/transfer-request}" method="post" class="form-group"
+              th:object="${transferDTO}">
             <div class="row mb-2">
                 <div class="col-md-4">
-                    <select
-                            class="custom-select"
-                            name="connection"
-                            th:field="*{creditorEmail}"
-                            id="connection" required
-                    >
-                        <option value="" selected hidden>Select A Connection</option>
-                        <option
-                                th:each="friend : ${connections}"
+                    <select th:field="*{creditorEmail}" class="custom-select" required>
+                        <option value="" selected hidden>Select a connection</option>
+                        <option th:each="friend : ${connections}"
                                 th:value="${friend.getEmail()}"
-                                th:text="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}"
-                        >
+                                th:text="${friend.getFirstname() + ' ' + friend.getLastname() + ' (' + friend.getEmail() + ')'}">
                         </option>
                     </select>
-
-                </div>
-                <div class="col-md-2">
-                    <input
-                            type="number"
-                            class="form-control"
-                            name="amount"
-                            placeholder=" 0€"
-                            th:field="*{amount}"
-                            min="1"
-                            step=".01"
-                            id="amount" required>
                 </div>
                 <div class="col-md-3">
-                    <input
-
-                            type="text"
-                            class="form-control"
-                            name="description"
-                            placeholder="Description"
-                            th:field="*{description}"
-                            id="description">
+                    <input th:field="*{amount}" type="number" min="1" class="form-control" placeholder="1" id="amount"
+                           required>
+                    <div th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" class="invalid-feedback"></div>
                 </div>
                 <div class="col-md-2">
-                    <button
-                            type="submit"
-                            class="btn btn-success"
-                            name="transfer"
-                            value="Transfer"
-                    >
-                        Pay
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal"
+                            style="width: 100%;">Pay
                     </button>
+                    <!--   <button confirm="" data-dialog="#confirmModal" data-confirmbtn="button.save" type="submit">Send</button> -->
                 </div>
             </div>
-
         </form>
+    </div>
 
 
-        <!-- Block sur charger sur compte et montant actuel -->
-
-
-        <div class="row">
-            <h5 class="text-left mt-5">Credit or debit your Pay my buddy account</h5>
-            <form class="col"
-                  th:action="@{/transfer/credit-account}"
-                  method="POST"
-            >
-                <input class="col"
-                       type="number"
-                       name="creditAmount"
-                       placeholder=" 0€"
-                       min="1"
-                       step=".01"
-                       id="creditAmount" required>
-                <button
-                        type="submit"
-                        class="btn btn-success col-mb-2"
-                        value="creditTransfer"
-                >
-                    Credit account
-                </button>
-            </form>
-
-            <form class="col"
-                  th:action="@{/transfer/debit-account}"
-                  method="POST"
-            >
-                <input class="col"
-                       type="number"
-                       name="debitAmount"
-                       placeholder=" 0€"
-                       min="1"
-                       step=".01"
-                       id="debitAmount" required>
-
-                <button
-                        type="submit"
-                        class="btn btn-danger col-mb-2"
-                        value="debitTransfer"
-                >
-                    Debit account
-                </button>
-
-            </form>
-        </div>
-
-
-        <!-- block sur historique de transfert -->
-
-        <div class="mt-5">
-
-            <div class="table-responsive">
-                <table
-                        class="table table-striped table-hover table-bordered mt-2"
-                        id="transactionTable">
-                    <thead>
-                    <h5 class="text-left">My Transactions</h5>
-                    <tr class="bg-success text-white">
-                        <th>Connection</th>
-                        <th>Description</th>
-                        <th>Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="transaction: ${transactionsList}">
-                        <td th:text="${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()}"></td>
-                        <td th:text="${transaction.getDescription()}"></td>
-                        <td th:text="${transaction.getTransferAmount()+'€'}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-
-
-                <!--
-
-                <div th:if="${totalPages > 1}">
-                    <div class="row col-sm-10">
-
-                        <div class="col-sm-1">
-                            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                                <a th:if="${currentPage != i}" th:href="@{'/transfer/' + ${i}}">[[${i}]]</a>
-                                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-                            </span>
-                        </div>
-
-                        <div class="col-sm-1">
-                            <a th:if="${currentPage < totalPages}"
-                               th:href="@{'/transfer/' + ${currentPage + 1}}">Next</a>
-                            <span th:unless="${currentPage < totalPages}">Next</span>
-                        </div>
-
-                        <div class="col-sm-1">
-                            <a th:if="${currentPage < totalPages}" th:href="@{'/transfer/' + ${totalPages}}">Last</a>
-                            <span th:unless="${currentPage < totalPages}">Last</span>
-                        </div>
-                    </div>
+    <!-- Modal confirmation transfer  -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" data-backdrop="static"
+         data-keyboard="false" aria-labelledby="confirmModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirm Transfer</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-    -->
-                <!--
-                                <div th:if="${totalPages > 1}">
-
-                                    <div class="row col-sm-10">
-
-                                        <div class="col-sm-1">
-
-                                                            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-
-                                                                <span th:unless="${currentPage != i}">[[${i}]]
-                                                                </span>
-                                                                &nbsp; &nbsp;
-
-                                                            </span>
-
-                                        </div>
-
-                                        <div class="col-sm-1">
-                                            <a th:if="${currentPage < totalPages}" th:href="@{'?pages=' + ${currentPage + 1}}">Next</a>
-                                            <span th:unless="${currentPage < totalPages}">Next</span>
-                                        </div>
-
-                                        <div class="col-sm-1">
-                                            <a th:if="${currentPage < totalPages}" th:href="@{'?pages=' + ${totalPages}}">Last</a>
-                                            <span th:unless="${currentPage < totalPages}">Last</span>
-                                        </div>
-
-
-                                    </div>
-
-                                </div>
-
-                -->
+                <div class="modal-body text-center">
+                    Do you confirm the payment?
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="confirmPaymentButton">Confirm Payment</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
 
+
+    <!-- Block sur charger sur compte et montant actuel -->
+    <div class="row">
+        <h5 class="text-left mt-5">Credit or debit your Pay my buddy account</h5>
+
+        <form class="col" th:action="@{/transfer/credit-account}" method="POST">
+            <input class="col" type="number" name="creditAmount" placeholder=" 0€" min="1" step=".01" id="creditAmount"
+                   required>
+            <button type="submit" class="btn btn-success col-mb-2" value="creditTransfer">
+                Credit account
+            </button>
+        </form>
+
+        <form class="col" th:action="@{/transfer/debit-account}" method="POST">
+            <input class="col" type="number" name="debitAmount" placeholder=" 0€" min="1" step=".01" id="debitAmount"
+                   required>
+            <button type="submit" class="btn btn-danger col-mb-2" value="debitTransfer">
+                Debit account
+            </button>
+        </form>
+
+    </div>
+
+
+    <!-- block sur historique de transfert -->
+    <div class="mt-5">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered mt-2" id="transactionTable">
+                <thead>
+                <h5 class="text-left">My Transactions</h5>
+                <tr class="bg-success text-white">
+                    <th>Connection</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction: ${transactions}">
+                    <td th:text="${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()}"></td>
+                    <td th:text="${transaction.getDescription()}"></td>
+                    <td th:text="${transaction.getTransferAmount()+'€'}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <!-- Pagination -->
+            <nav aria-label="Pagination" th:if="${totalPages > 0}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a th:replace="fragments/paging :: paging(1, '<<', 'First Page')"></a>
+                    </li>
+                    <li class="page-item font-weight-bold" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a th:replace="fragments/paging :: paging(${currentPage - 1}, 'Prev', 'Previous Page')"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                    <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+                        th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                        <a th:replace="fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page})"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                    <li class="page-item font-weight-bold"
+                        th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a th:replace="fragments/paging :: paging(${currentPage + 1},'Next', 'Next Page')"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a th:replace="fragments/paging :: paging(${totalPages}, '>>', 'Last Page')"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 
 
-<script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> <!-- TODO -->
 
+<script>
+        $(document).ready(function() {
+            $('#confirmModal').on('click', '#confirmPaymentButton', function() {
+                $('#transferDTO').submit();
+            });
+        });
+</script>
+<script>
       function openForm() {
         document.getElementById("popupForm").style.display = "block";
       }

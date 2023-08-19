@@ -4,6 +4,7 @@ import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface TransactionService {
 
     void transferMoneyFromExternAccountToPMBAccount(String email, BigDecimal creditAmount);
 
-    Page<Transaction> findPaginated(int pageNo, int pageSize);
+    Page<Transaction> getPagedTransactionsByPersonSortByMostRecentDate(Person person, Pageable pageable);
 
 
 }

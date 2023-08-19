@@ -35,7 +35,10 @@ class ProfileControllerTest {
     @Test
     @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
     void editProfileInformation() throws Exception {
-        UpdatePersonDTO updatePersonDTO = new UpdatePersonDTO("Tata", "Yoyo");
+        UpdatePersonDTO updatePersonDTO = new UpdatePersonDTO();
+        ;
+        updatePersonDTO.setFirstname("Tata");
+        updatePersonDTO.setLastname("Yoyo");
 
         //When we initiate the request
         mockMvc.perform(post("/profile/edit")
