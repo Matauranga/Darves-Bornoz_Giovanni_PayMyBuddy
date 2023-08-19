@@ -89,7 +89,7 @@
               th:object="${transferDTO}">
             <div class="row mb-2">
                 <div class="col-md-4">
-                    <select th:field="*{creditorEmail}" class="custom-select" required>
+                    <select th:field="*{creditorEmail}" class="form-select" required>
                         <option value="" selected hidden>Select a connection</option>
                         <option th:each="friend : ${connections}"
                                 th:value="${friend.getEmail()}"
@@ -101,6 +101,10 @@
                     <input th:field="*{amount}" type="number" min="1" class="form-control" placeholder="1" id="amount"
                            required>
                     <div th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="Description"
+                           th:field="*{description}" id="description">
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal"
@@ -214,16 +218,15 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> <!-- TODO -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <script>
-        $(document).ready(function() {
-            $('#confirmModal').on('click', '#confirmPaymentButton', function() {
+       $(document).ready(function() {
+         $('#confirmModal').on('click', '#confirmPaymentButton', function() {
                 $('#transferDTO').submit();
-            });
-        });
-</script>
-<script>
+         });
+       });
+
       function openForm() {
         document.getElementById("popupForm").style.display = "block";
       }

@@ -12,5 +12,13 @@ import java.util.UUID;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 
+    /**
+     * Handle method to get all transaction of a person, sort by most recent date, and pageable
+     *
+     * @param creditor the person as she is creditor
+     * @param debtor  the person as she is debtor
+     * @param pageable how we handle pagination
+     * @return a list of transactions
+     */
     Page<Transaction> findAllByCreditorOrDebtorOrderByOperationDateDesc(Person creditor, Person debtor, Pageable pageable);
 }

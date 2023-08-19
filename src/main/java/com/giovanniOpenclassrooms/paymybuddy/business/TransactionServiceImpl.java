@@ -24,7 +24,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
     @Autowired
-    private PersonService personService; //TODO impl ou interface
+    private PersonService personService; //TODO Frank impl ou interface
 
     @Autowired
     private PersonRepository personRepository;
@@ -55,7 +55,7 @@ public class TransactionServiceImpl implements TransactionService {
      * @return a List of all transfer where he person is involved (if change --> a List of all transfer where he person is involved like debtor)
      */
     @Override
-    public List<Transaction> getTransactionsByPerson(Person person) {//TODO : tout les transfers ou juste la premiere partie ?
+    public List<Transaction> getTransactionsByPerson(Person person) {//TODO  Frank : tout les transfers ou juste la premiere partie ?
 
         return getAllTransactions().stream()
                 .filter(transaction -> person.getPersonId().equals(transaction.getDebtor().getPersonId())
@@ -81,8 +81,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         final var transaction = new Transaction(debtor.getPersonId(), creditor.getPersonId(), amount, transactionDTO.description());
 
-        this.personRepository.saveAll(List.of(creditor, debtor));
-        this.transactionRepository.save(transaction);
+        personRepository.saveAll(List.of(creditor, debtor));
+        transactionRepository.save(transaction);
 
     }
 
@@ -129,7 +129,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     public Page<Transaction> getPagedTransactionsByPersonSortByMostRecentDate(Person person, Pageable pageable) {
-        return this.transactionRepository.findAllByCreditorOrDebtorOrderByOperationDateDesc(person, person, pageable);
+        return transactionRepository.findAllByCreditorOrDebtorOrderByOperationDateDesc(person, person, pageable);
     }
 
 }

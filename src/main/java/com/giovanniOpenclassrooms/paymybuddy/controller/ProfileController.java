@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,7 +48,7 @@ public class ProfileController {
      * @return the profile page
      */
     @PostMapping("/profile/edit")
-    public String editProfileInformation(Authentication authentication, @Valid @ModelAttribute("savePersonFromProfile") UpdatePersonDTO updatePersonDTO, BindingResult result, Model model) {
+    public String editProfileInformation(Authentication authentication, @Valid @ModelAttribute("savePersonFromProfile") UpdatePersonDTO updatePersonDTO, Model model) {
 
         try {
 
@@ -66,6 +65,8 @@ public class ProfileController {
     }
 
     /**
+     * Handler method to delete a connection
+     *
      * @param authentication      the parameter that contains information about the logged in person
      * @param emailFriendToDelete the email of the person to delete of the connection list
      * @param model               attribute to be passed to the front
@@ -87,13 +88,15 @@ public class ProfileController {
         return "profile";
     }
 
+
     /**
-     * @param authentication
-     * @param model
-     * @return
+     * Handler method to delete an account
+     *
+     * @param authentication the parameter that contains information about the logged in person
+     * @return the login page
      */
     @PostMapping("/delete")
-    public String deleteAccount(Authentication authentication, Model model) { //TODO pourquoi ça ne marche pas sur un des compte crée dans data.sql
+    public String deleteAccount(Authentication authentication) { //TODO Frank pourquoi ça ne marche pas sur un des compte crée dans data.sql
 
         try {
 

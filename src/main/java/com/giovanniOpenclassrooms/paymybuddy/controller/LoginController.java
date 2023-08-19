@@ -33,7 +33,7 @@ public class LoginController {
      *
      * @return the login page
      */
-    @GetMapping("/error") //TODO marche pas
+    @GetMapping("/error") //TODO Frank marche pas et problem au 1er log
     public String error() {
         return "redirect:/login";
     }

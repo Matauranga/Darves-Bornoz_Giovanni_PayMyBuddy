@@ -14,10 +14,9 @@ public class PayMyBuddyApplication {
 
 /* TODO:
         gérer les taxes sur transaction
-
+        gérer pagination /comprendre
         revoir le digramme
         faire les script sql
         faire les livrables
-
         ??? gérer relation avec compte externe ???
  */

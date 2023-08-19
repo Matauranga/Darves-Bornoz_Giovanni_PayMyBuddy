@@ -41,9 +41,11 @@ public class TransferController {
      * @param model          attribute to be passed to the front
      * @return the transfer page
      */
-    @GetMapping({"/transfer", "/transfer/**"})
-    public String getTransfer(Authentication authentication, Model model, @RequestParam(defaultValue = "1") int page) {
+    @GetMapping("/transfer")
+    public String getTransfer(Authentication authentication, Model model, @RequestParam(defaultValue = "1") Integer page) {
         int size = 1;
+
+
         Person connectedPerson = personService.getPersonByEmail(authentication.getName());
 
         model.addAttribute("transferDTO", new TransferDTO());
@@ -150,7 +152,7 @@ public class TransferController {
 
             transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
 
-            model.addAttribute("successTransfer", true);//TODO ???
+            model.addAttribute("successTransfer", true);
 
         } catch (NegativeBalanceAccount negativeBalanceAccount) {
             model.addAttribute("NotEnoughMoney", true);

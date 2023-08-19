@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class LoginControllerTest {//TODO frank
+class LoginControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -55,7 +55,7 @@ class LoginControllerTest {//TODO frank
 
     @DisplayName("Try to save a person without filling out the form")
     @Test
-    public void registrationThrowInvalidField() throws Exception { //TODO : verify ?
+    public void registrationThrowInvalidField() throws Exception {
         //Given a DTO of a person who want to register
         RegisterPersonDTO registerPersonDTO = new RegisterPersonDTO("", "", "", "", "");
 
