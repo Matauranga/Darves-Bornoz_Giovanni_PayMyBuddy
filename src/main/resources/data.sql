@@ -1,8 +1,9 @@
 
 INSERT INTO "PUBLIC"."PERSON" VALUES
-(90.00, DATE '2023-07-31', UUID 'c076de71-b095-4e98-a58d-3e0ec3199daf', 'jedi@mail.fr', 'Luke', 'Skywalker', '$2a$10$ZSC9aOm3As6cyO4EvhBLwO4CkUv6QSOONxF4hJ0oYuSkbBV8ldoW.'),
+(90.00, DATE '1977-10-19', UUID 'c076de71-b095-4e98-a58d-3e0ec3199daf', 'jedi@mail.fr', 'Luke', 'Skywalker', '$2a$10$ZSC9aOm3As6cyO4EvhBLwO4CkUv6QSOONxF4hJ0oYuSkbBV8ldoW.'),
 (110.00, DATE '2023-07-31', UUID '1c02d056-06c6-47c4-89d6-0122032dfb33', 'g@mail.fr', 'Goo', 'Gle', '$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG'),
-(85.00, DATE '2023-07-31', UUID 'a109ae40-e1d9-42c2-bdd5-a7585ad836b0', 'baba@mail.fr', 'Baba', 'Au-Rhum', '$2a$10$3GusYEcweJL1DdndZgPFkOAP7ItDMYPug57mxd6hWuDf/Nxn9OTta');
+(85.00, DATE '2023-07-31', UUID 'a109ae40-e1d9-42c2-bdd5-a7585ad836b0', 'baba@mail.fr', 'Baba', 'Au-Rhum', '$2a$10$3GusYEcweJL1DdndZgPFkOAP7ItDMYPug57mxd6hWuDf/Nxn9OTta'),
+(100.00, DATE '1956-05-12', UUID '30ecf9f8-cb08-45e4-af77-317d24171964', 'homer@mail.fr', 'Homer', 'Simpson', '	$2a$10$D2dpACkbY1py4kU/ZwmlIe.K6ZwcK9TGi8drYuI/vy6JJJZId0IIS');
 
 INSERT INTO "PUBLIC"."PERSON_FRIENDS" VALUES
 (UUID 'c076de71-b095-4e98-a58d-3e0ec3199daf', UUID '1c02d056-06c6-47c4-89d6-0122032dfb33'),
