@@ -98,7 +98,7 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input th:field="*{amount}" type="number" min="1" class="form-control" placeholder="1" id="amount"
+                    <input th:field="*{amount}" type="number" min="1" class="amount form-control" placeholder="1" id="amount"
                            required>
                     <div th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" class="invalid-feedback"></div>
                 </div>
@@ -110,7 +110,6 @@
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal"
                             style="width: 100%;">Pay
                     </button>
-                    <!--   <button confirm="" data-dialog="#confirmModal" data-confirmbtn="button.save" type="submit">Send</button> -->
                 </div>
             </div>
         </form>
@@ -129,6 +128,7 @@
                 </div>
                 <div class="modal-body text-center">
                     Do you confirm the payment?
+                    <p id="taxe"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="confirmPaymentButton">Confirm Payment</button>
@@ -234,6 +234,16 @@
       function closeForm() {
         document.getElementById("popupForm").style.display = "none";
       }
+</script>
+<script language="javascript">
+const input = document.querySelector(".amount");
+const taxe = document.getElementById("taxe");
+
+input.addEventListener("change", updateValue);
+
+function updateValue(e) {
+  taxe.textContent = "Expected tax for this transaction : " + Math.round(((e.target.value)*0.05)*100)/100 + " €";
+}
 </script>
 
 </body>
