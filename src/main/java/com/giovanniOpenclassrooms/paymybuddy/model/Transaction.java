@@ -50,4 +50,13 @@ public class Transaction {
         this.operationDate = LocalDateTime.now();
         this.description = description;
     }
+
+    public Transaction(Person person, BigDecimal transferAmount, String description) {
+
+        this.debtor = person;
+        this.creditor = person;
+        this.transferAmount = transferAmount;
+        this.operationDate = LocalDateTime.now();
+        this.description = description;
+    }
 }

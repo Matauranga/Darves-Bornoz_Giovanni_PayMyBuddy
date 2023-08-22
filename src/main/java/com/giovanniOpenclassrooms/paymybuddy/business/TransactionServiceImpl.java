@@ -75,7 +75,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public void transferElectronicMoney(TransactionDTO transactionDTO) {
 
-        final BigDecimal amount = transactionDTO.amount().setScale(2,RoundingMode.HALF_EVEN);
+        final BigDecimal amount = transactionDTO.amount().setScale(2, RoundingMode.HALF_EVEN);
 
         BigDecimal amountTax = amount.multiply(Tax.TAXE_VALUE).setScale(2, RoundingMode.HALF_EVEN);
         log.info("Amount of Tax to be deducted : {} €", amountTax);
@@ -113,12 +113,14 @@ public class TransactionServiceImpl implements TransactionService {
      */
     @Transactional
     public void transferMoneyFromPMBAccountToExternAccount(String email, BigDecimal debitAmount) {
-
         final Person person = personService.getPersonByEmail(email);
-
+        final String description = "Transfer money to extern account.";
         person.debitBalance(debitAmount);
-        personRepository.save(person);
 
+        Transaction transaction = new Transaction(person, debitAmount, description);
+
+        personRepository.save(person);
+        transactionRepository.save(transaction);
     }
 
     /**
@@ -127,11 +129,14 @@ public class TransactionServiceImpl implements TransactionService {
      */
     @Transactional
     public void transferMoneyFromExternAccountToPMBAccount(String email, BigDecimal creditAmount) {
-
         final Person person = personService.getPersonByEmail(email);
-
+        final String description = "Fill your PMB account from extern account.";
         person.creditBalance(creditAmount);
+
+        Transaction transaction = new Transaction(person, creditAmount, description);
+
         personRepository.save(person);
+        transactionRepository.save(transaction);
     }
 
 
