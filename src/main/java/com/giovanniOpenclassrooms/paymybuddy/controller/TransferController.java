@@ -4,6 +4,7 @@ import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.TransferDTO;
 import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
 import com.giovanniOpenclassrooms.paymybuddy.business.TransactionService;
+import com.giovanniOpenclassrooms.paymybuddy.constants.PageView;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccountException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
@@ -39,11 +40,10 @@ public class TransferController {
      *
      * @param authentication information about the person connected to the application
      * @param model          attribute to be passed to the front
-     * @return the transfer page
      */
     @GetMapping("/transfer")
     public String getTransfer(Authentication authentication, Model model, @RequestParam(defaultValue = "1") Integer page) {
-        int size = 1;
+        int size = PageView.TRANSACTION_BY_PAGE;
 
 
         Person connectedPerson = personService.getPersonByEmail(authentication.getName());
@@ -54,7 +54,7 @@ public class TransferController {
         model.addAttribute("connections", person.getConnectionsList());
         model.addAttribute("personBalance", connectedPerson.getAmountBalance());
 
-
+        model.addAttribute("authentication", authentication.getName());
         Page<Transaction> transactions = transactionService.getPagedTransactionsByPersonSortByMostRecentDate(connectedPerson, PageRequest.of(page - 1, size));
         model.addAttribute("transactions", transactions.getContent());
         model.addAttribute("currentPage", transactions.getNumber() + 1);
@@ -63,6 +63,7 @@ public class TransferController {
         model.addAttribute("pageSize", size);
 
         return "transfer";
+
     }
 
     /**

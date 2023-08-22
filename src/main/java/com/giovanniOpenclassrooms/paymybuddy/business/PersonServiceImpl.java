@@ -97,7 +97,7 @@ public class PersonServiceImpl implements PersonService {
      * @param personToDelete the person to delete
      */
     public void deletePerson(Person personToDelete) {
-        personRepository.deleteById(personToDelete.getPersonId());
+        personRepository.deleteById(personToDelete.getPersonId());//TODO FRANK : fonctionne mais ne fonctionne pas
     }
 
     /**

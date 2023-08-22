@@ -169,18 +169,21 @@
         <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered mt-2" id="transactionTable">
                 <thead>
-                <h5 class="text-left">My Transactions</h5>
+                <h5 class="text-left">My Transactions(in gray the transfers you have made, in white those received)</h5>
                 <tr class="bg-success text-white">
                     <th>Connection</th>
                     <th>Description</th>
                     <th>Amount</th>
+                    <th>Tax on transaction</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="transaction: ${transactions}">
+                <tr th:each="transaction: ${transactions}" class=""
+                    th:classappend="${transaction.getDebtor.getEmail() == authentication? 'bg-secondary' : ''}"  >
                     <td th:text="${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()}"></td>
                     <td th:text="${transaction.getDescription()}"></td>
                     <td th:text="${transaction.getTransferAmount()+'€'}"></td>
+                    <td th:text="${transaction.getTaxAmount()+'€'}"></td>
                 </tr>
                 </tbody>
             </table>

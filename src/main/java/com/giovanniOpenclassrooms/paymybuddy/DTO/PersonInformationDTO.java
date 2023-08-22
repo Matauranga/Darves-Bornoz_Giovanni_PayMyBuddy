@@ -17,7 +17,7 @@ public class PersonInformationDTO {
     String lastname;
     String email;
     String password;
-    LocalDate Birthdate;
+    LocalDate birthdate;
     BigDecimal accountBalance;
     List<Person> friendsList;
 }

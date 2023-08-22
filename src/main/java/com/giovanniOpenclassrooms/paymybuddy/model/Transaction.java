@@ -33,25 +33,21 @@ public class Transaction {
     @Column(name = "transfer_amount")
     private BigDecimal transferAmount;
 
+    private BigDecimal taxAmount;
+
     @Column(name = "operation_date")
     private LocalDateTime operationDate;
 
     private String description;
 
 
-    public Transaction(UUID debtors, UUID creditors, BigDecimal transferAmount, String description) {
+    public Transaction(Person debtor, Person creditor, BigDecimal transferAmount,BigDecimal taxAmount, String description) {
 
-        var userTransmitter = new Person();
-        userTransmitter.setPersonId(debtors);
-        this.debtor = userTransmitter;
-
-        var userBeneficiary = new Person();
-        userBeneficiary.setPersonId(creditors);
-        this.creditor = userBeneficiary;
-
+        this.debtor = debtor;
+        this.creditor = creditor;
         this.transferAmount = transferAmount;
+        this.taxAmount = taxAmount;
         this.operationDate = LocalDateTime.now();
         this.description = description;
     }
-
 }

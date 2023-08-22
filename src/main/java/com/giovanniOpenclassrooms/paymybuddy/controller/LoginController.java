@@ -22,7 +22,8 @@ public class LoginController {
      * Handler method to handle login request
      */
     @GetMapping({"/", "/login"})
-    public void login() {
+    public String login() {
+        return "login";
     }
 
     /**
@@ -30,7 +31,7 @@ public class LoginController {
      *
      * @return the login page
      */
-    @GetMapping("/error") //TODO Frank marche pas et problem au 1er log
+    @GetMapping("/error") //TODO Frank j'enlevè ?
     public String error() {
         return "redirect:/login";
     }

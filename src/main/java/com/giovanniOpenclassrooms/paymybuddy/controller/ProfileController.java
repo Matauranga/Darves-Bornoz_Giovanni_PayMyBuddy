@@ -28,13 +28,13 @@ public class ProfileController {
      * @param model          attribute to be passed to the front
      */
     @GetMapping("/profile")
-    public void getProfile(Authentication authentication, Model model) {
+    public String getProfile(Authentication authentication, Model model) {
 
         PersonInformationDTO personInformationDTO = personService.getPersonInformationDTOFromEmail(authentication.getName());
 
         model.addAttribute("UpdatePersonDTO", new UpdatePersonDTO());
         model.addAttribute("personInformationDTO", personInformationDTO);
-
+        return "profil";
     }
 
     /**
