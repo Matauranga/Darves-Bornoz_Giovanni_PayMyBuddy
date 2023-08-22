@@ -4,7 +4,7 @@ import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
 import com.giovanniOpenclassrooms.paymybuddy.DTO.TransferDTO;
 import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
 import com.giovanniOpenclassrooms.paymybuddy.business.TransactionService;
-import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccount;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccountException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
@@ -119,7 +119,7 @@ public class TransferController {
             transactionService.transferMoneyFromPMBAccountToExternAccount(authentication.getName(), debitAmount);
             model.addAttribute("successTransfer", true);
 
-        } catch (NegativeBalanceAccount negativeBalanceAccount) {
+        } catch (NegativeBalanceAccountException negativeBalanceAccountException) {
             model.addAttribute("NotEnoughMoney", true);
             return "transfer";
 
@@ -154,7 +154,7 @@ public class TransferController {
 
             model.addAttribute("successTransfer", true);
 
-        } catch (NegativeBalanceAccount negativeBalanceAccount) {
+        } catch (NegativeBalanceAccountException negativeBalanceAccountException) {
             model.addAttribute("NotEnoughMoney", true);
             return "transfer";
         } catch (Exception exception) {

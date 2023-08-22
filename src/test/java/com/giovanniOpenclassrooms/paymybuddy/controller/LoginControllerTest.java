@@ -82,7 +82,7 @@ class LoginControllerTest {
 
                 //Then we verify is all works correctly
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("CONFLICT - email exists")));
+                .andExpect(content().string(containsString("Email already existing")));
     }
 
 }

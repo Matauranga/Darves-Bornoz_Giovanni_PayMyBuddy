@@ -141,7 +141,7 @@ public class PersonServiceImpl implements PersonService {
 
         // check if user exists, or throw exception
         if (personRepository.existsByEmail(registerPersonDTO.getEmail())) {
-            throw new PersonAlreadyExistsException("CONFLICT - email exists");
+            throw new PersonAlreadyExistsException("Email already existing");
         }
         Person person = new Person();
         person.setFirstname(registerPersonDTO.getFirstName());

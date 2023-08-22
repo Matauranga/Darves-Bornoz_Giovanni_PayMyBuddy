@@ -1,7 +1,7 @@
 package com.giovanniOpenclassrooms.paymybuddy.business;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.TransactionDTO;
-import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccount;
+import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccountException;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.NotFoundException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
@@ -139,7 +139,7 @@ public class TransactionServiceImplTest {
         when(personRepository.findById(debtorId)).thenReturn(Optional.of(debtor));
         when(personRepository.findById(creditorId)).thenReturn(Optional.of(creditor));
 
-        assertThrows(NegativeBalanceAccount.class, () -> transactionServiceImpl.transferElectronicMoney(transactionDTO));
+        assertThrows(NegativeBalanceAccountException.class, () -> transactionServiceImpl.transferElectronicMoney(transactionDTO));
 
         //Then we verify if the transfer don't work
         verify(personRepository, times(1)).findById(any());
@@ -201,7 +201,7 @@ public class TransactionServiceImplTest {
 
         //When we try to make the transfer
         when(personService.getPersonByEmail(any())).thenReturn(person);
-        assertThrows(NegativeBalanceAccount.class, () -> transactionServiceImpl.transferMoneyFromPMBAccountToExternAccount(person.getEmail(), amount));
+        assertThrows(NegativeBalanceAccountException.class, () -> transactionServiceImpl.transferMoneyFromPMBAccountToExternAccount(person.getEmail(), amount));
 
 
         //Then we verify if the transfer don't work
