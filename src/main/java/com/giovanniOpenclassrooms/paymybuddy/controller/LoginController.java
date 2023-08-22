@@ -20,12 +20,9 @@ public class LoginController {
 
     /**
      * Handler method to handle login request
-     *
-     * @return the login page
      */
     @GetMapping({"/", "/login"})
-    public String login() {
-        return "login";
+    public void login() {
     }
 
     /**

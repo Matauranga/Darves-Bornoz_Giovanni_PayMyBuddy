@@ -12,9 +12,7 @@ public class HomeController {
      * @return the home page
      */
     @GetMapping("/home")
-    public String profile() {
-
-        return "home";
+    public void profile() {
     }
 
 }

@@ -7,6 +7,7 @@ import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
 import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import com.giovanniOpenclassrooms.paymybuddy.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,10 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Log4j2
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
@@ -71,15 +74,22 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public void transferElectronicMoney(TransactionDTO transactionDTO) {
 
-        final BigDecimal amount = transactionDTO.amount();
+        final BigDecimal amount = transactionDTO.amount().setScale(4,RoundingMode.HALF_EVEN);//TODO : Franck finance ou réel;
 
-        final Person debtor = getPersonOrElseThrow(transactionDTO.debtorId())
-                .debitBalance(amount);
+        BigDecimal tax = amount.multiply(new BigDecimal("0.05")).setScale(4, RoundingMode.HALF_EVEN);
+        log.info("Amount of tax to be deducted : {} €", tax);
+
+        final BigDecimal amountAfterTax = amount.add(tax);
+        log.info("Amount after tax : {} €", amountAfterTax);
+
+        final Person debtor = getPersonOrElseThrow(transactionDTO.debtorId()).debitBalance(amount);
+        //final Person debtor = getPersonOrElseThrow(transactionDTO.debtorId()).debitBalance(amountAfterTax);
 
         final Person creditor = getPersonOrElseThrow(transactionDTO.creditorId())
                 .creditBalance(amount);
 
         final var transaction = new Transaction(debtor.getPersonId(), creditor.getPersonId(), amount, transactionDTO.description());
+        //final var transaction = new Transaction(debtor.getPersonId(), creditor.getPersonId(), amount, transactionDTO.description());
 
         personRepository.saveAll(List.of(creditor, debtor));
         transactionRepository.save(transaction);

@@ -26,17 +26,15 @@ public class ProfileController {
      *
      * @param authentication the parameter that contains information about the logged in person
      * @param model          attribute to be passed to the front
-     * @return the profile page
      */
     @GetMapping("/profile")
-    public String getProfile(Authentication authentication, Model model) {
+    public void getProfile(Authentication authentication, Model model) {
 
         PersonInformationDTO personInformationDTO = personService.getPersonInformationDTOFromEmail(authentication.getName());
 
         model.addAttribute("UpdatePersonDTO", new UpdatePersonDTO());
         model.addAttribute("personInformationDTO", personInformationDTO);
 
-        return "profile";
     }
 
     /**
