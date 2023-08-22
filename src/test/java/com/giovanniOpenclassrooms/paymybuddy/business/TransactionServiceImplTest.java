@@ -74,14 +74,14 @@ public class TransactionServiceImplTest {
     void getTransactionsByPerson() {
         //Given initial list of transactions and the corresponding persons
         Person person1 = PersonFaker.generate();
-        UUID uuidPerson1 = person1.getPersonId();
+        Person person2 = PersonFaker.generate();
+        Person person3 =PersonFaker.generate();
 
-        UUID uuidPerson2 = UUID.randomUUID();
-        UUID uuidPerson3 = UUID.randomUUID();
 
-        Transaction transaction1 = new Transaction(uuidPerson1, uuidPerson2, null, null);
-        Transaction transaction2 = new Transaction(uuidPerson3, uuidPerson1, null, null);
-        Transaction transaction3 = new Transaction(uuidPerson2, uuidPerson3, null, null);
+
+        Transaction transaction1 = new Transaction(person1, person2,null, null, null);
+        Transaction transaction2 = new Transaction(person3, person1, null, null,null);
+        Transaction transaction3 = new Transaction(person2, person3, null, null,null);
 
         List<Transaction> transactions = List.of(transaction1, transaction2, transaction3);
 
@@ -94,19 +94,21 @@ public class TransactionServiceImplTest {
         verify(transactionRepository, times(1)).findAll();
     }
 
+
+
     @DisplayName("Try to proceed to an electronic transfer")
     @Test
     void transferElectronicMoney() {
         //Given an initial money transfer
         Person debtor = PersonFaker.generate();
         UUID debtorId = debtor.getPersonId();
-        debtor.setAmountBalance(new BigDecimal("50.0"));
+        debtor.setAmountBalance(new BigDecimal("50.00"));
 
         Person creditor = PersonFaker.generate();
         UUID creditorId = creditor.getPersonId();
-        creditor.setAmountBalance(new BigDecimal("50.0"));
+        creditor.setAmountBalance(new BigDecimal("50.00"));
 
-        TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.0"), "Yo");
+        TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.00"), "Yo");
 
         //When we make the transfer
         when(personRepository.findById(debtorId)).thenReturn(Optional.of(debtor));
@@ -117,7 +119,7 @@ public class TransactionServiceImplTest {
         verify(personRepository, times(2)).findById(any());
         verify(personRepository, times(1)).saveAll(any());
         verify(transactionRepository, times(1)).save(any());
-        assertThat(creditor.getAmountBalance()).isEqualTo(new BigDecimal("55.0"));
+        assertThat(creditor.getAmountBalance()).isEqualTo(new BigDecimal("55.00"));
     }
 
     @DisplayName("Try to proceed to an electronic transfer without enough money")

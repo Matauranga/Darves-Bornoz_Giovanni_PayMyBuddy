@@ -55,6 +55,7 @@ public class TransferController {
         model.addAttribute("personBalance", connectedPerson.getAmountBalance());
 
         model.addAttribute("authentication", authentication.getName());
+
         Page<Transaction> transactions = transactionService.getPagedTransactionsByPersonSortByMostRecentDate(connectedPerson, PageRequest.of(page - 1, size));
         model.addAttribute("transactions", transactions.getContent());
         model.addAttribute("currentPage", transactions.getNumber() + 1);
@@ -102,11 +103,11 @@ public class TransferController {
             transactionService.transferMoneyFromExternAccountToPMBAccount(authentication.getName(), creditAmount);
             model.addAttribute("successTransfer", true);
 
-        } catch (Exception exception) {
+        } /*catch (Exception exception) {
             model.addAttribute("transferFailed", exception.getMessage());
             return "transfer";
 
-        } finally {
+        }*/ finally {
             getTransfer(authentication, model, 1);
         }
         return "transfer";
@@ -124,11 +125,11 @@ public class TransferController {
             model.addAttribute("NotEnoughMoney", true);
             return "transfer";
 
-        } catch (Exception exception) {
+        } /*catch (Exception exception) {
             model.addAttribute("transferFailed", exception.getMessage());
             return "transfer";
 
-        } finally {
+        } */ finally {
             getTransfer(authentication, model, 1);
         }
         return "transfer";

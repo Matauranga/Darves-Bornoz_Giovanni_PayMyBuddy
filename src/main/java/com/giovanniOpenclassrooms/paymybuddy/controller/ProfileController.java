@@ -34,7 +34,7 @@ public class ProfileController {
 
         model.addAttribute("UpdatePersonDTO", new UpdatePersonDTO());
         model.addAttribute("personInformationDTO", personInformationDTO);
-        return "profil";
+        return "profile";
     }
 
     /**
@@ -48,15 +48,9 @@ public class ProfileController {
     @PostMapping("/profile/edit")
     public String editProfileInformation(Authentication authentication, @Valid @ModelAttribute("savePersonFromProfile") UpdatePersonDTO updatePersonDTO, Model model) {
 
-        try {
 
-            personService.updatePerson(authentication.getName(), updatePersonDTO);
-
-        } catch (Exception ignored) {
-
-        } finally {
-            getProfile(authentication, model);
-        }
+        personService.updatePerson(authentication.getName(), updatePersonDTO);
+        getProfile(authentication, model);
 
         return "profile";
 
@@ -73,15 +67,9 @@ public class ProfileController {
     @PostMapping("/profile/editFriend")
     public String editFriendList(Authentication authentication, String emailFriendToDelete, Model model) {
 
-        try {
 
-            personService.removeConnection(personService.getPersonByEmail(authentication.getName()), personService.getPersonByEmail(emailFriendToDelete));
-
-        } catch (Exception ignored) {
-
-        } finally {
-            getProfile(authentication, model);
-        }
+        personService.removeConnection(personService.getPersonByEmail(authentication.getName()), personService.getPersonByEmail(emailFriendToDelete));
+        getProfile(authentication, model);
 
         return "profile";
     }
@@ -96,15 +84,8 @@ public class ProfileController {
     @PostMapping("/delete")
     public String deleteAccount(Authentication authentication) { //TODO Frank pourquoi ça ne marche pas sur un des compte crée dans data.sql
 
-        try {
-
-            personService.deletePerson(personService.getPersonByEmail(authentication.getName()));
-
-        } catch (Exception ignored) {
-
-        } finally {
-            loginController.login();
-        }
+        personService.deletePerson(personService.getPersonByEmail(authentication.getName()));
+        loginController.login();
 
         return "redirect:/login";
     }

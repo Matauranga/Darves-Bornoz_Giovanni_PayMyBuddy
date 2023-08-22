@@ -84,7 +84,7 @@ class TransferControllerTest {
 
                 //Then we verify is all works correctly
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Congratulations your transfer works!")));//TODO Frank test que je ne sais pas pk il il passe mais passe pas, et je ne sais pas comment faire les disabled
+                .andExpect(content().string(containsString("Congratulations your transfer works!")));
 
     }
 
@@ -142,7 +142,7 @@ class TransferControllerTest {
                 .andExpect(content().string(containsString("Congratulations your transfer works!")));
     }
 
-    @Disabled //TODO les 2 disabled
+    @Disabled //TODO les 2 disabled, est t'il possible de simuler leur échec
     @DisplayName("Try to fill a PMB account but failed")
     @Test
     @WithMockUser(username = "dédé@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
@@ -200,7 +200,7 @@ class TransferControllerTest {
     @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
     void debitMoneyFromPMBAccountFailed() throws Exception {
         //Given an email for the connection to add
-        BigDecimal amount = new BigDecimal("0.0");
+        BigDecimal amount = new BigDecimal("");
 
         //When we initiate the request
         mockMvc.perform(post("/transfer/debit-account")

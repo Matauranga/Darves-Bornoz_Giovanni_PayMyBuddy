@@ -59,7 +59,7 @@ public class TransactionServiceImpl implements TransactionService {
      * @return a List of all transfer where he person is involved (if change --> a List of all transfer where he person is involved like debtor)
      */
     @Override
-    public List<Transaction> getTransactionsByPerson(Person person) {//TODO  Frank : tout les transfers ou juste la premiere partie ?
+    public List<Transaction> getTransactionsByPerson(Person person) {
 
         return getAllTransactions().stream()
                 .filter(transaction -> person.getPersonId().equals(transaction.getDebtor().getPersonId())
