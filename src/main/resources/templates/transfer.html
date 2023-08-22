@@ -98,7 +98,8 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input th:field="*{amount}" type="number" min="1" class="amount form-control" placeholder="1" id="amount"
+                    <input th:field="*{amount}" type="number" min="1" class="amount form-control" placeholder="1"
+                           id="amount"
                            required>
                     <div th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" class="invalid-feedback"></div>
                 </div>
@@ -128,7 +129,8 @@
                 </div>
                 <div class="modal-body text-center">
                     Do you confirm the payment?
-                    <p id="taxe"></p>
+                    <p class="pt-2" id="taxe"></p>
+                    (Amount given for information only)
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="confirmPaymentButton">Confirm Payment</button>
@@ -234,6 +236,8 @@
       function closeForm() {
         document.getElementById("popupForm").style.display = "none";
       }
+
+
 </script>
 <script language="javascript">
 const input = document.querySelector(".amount");
@@ -244,6 +248,8 @@ input.addEventListener("change", updateValue);
 function updateValue(e) {
   taxe.textContent = "Expected tax for this transaction : " + Math.round(((e.target.value)*0.05)*100)/100 + " €";
 }
+
+
 </script>
 
 </body>
