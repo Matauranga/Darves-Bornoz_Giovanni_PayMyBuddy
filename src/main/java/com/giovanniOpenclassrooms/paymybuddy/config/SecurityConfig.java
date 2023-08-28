@@ -34,16 +34,19 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 //   .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.NEVER)) //TODO problem 1er log
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/sign-up/**", "/transfer/**", "/actuator/**", "/profile/**", "/home/**","/error/**").permitAll()
+                        authorize.requestMatchers("/sign-up/**", "/transfer/**", "/actuator/**", "/profile/**", "/home/**", "/error/**").permitAll()
                                 .requestMatchers(toH2Console()).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(
                         form -> form
                                 .loginPage("/login")
+                                .usernameParameter("email")
+                                .passwordParameter("password")
+                                .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/transfer")
-                                .failureForwardUrl("/login")
                                 .permitAll()
+
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

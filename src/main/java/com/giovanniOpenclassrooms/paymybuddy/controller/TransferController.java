@@ -43,7 +43,7 @@ public class TransferController {
      */
     @GetMapping("/transfer")
     public String getTransfer(Authentication authentication, Model model, @RequestParam(defaultValue = "1") Integer page) {
-        int size = PageView.TRANSACTION_BY_PAGE;
+        int size = PageView.TRANSACTION_BY_PAGE_PERSON_VIEW;
 
 
         Person connectedPerson = personService.getPersonByEmail(authentication.getName());

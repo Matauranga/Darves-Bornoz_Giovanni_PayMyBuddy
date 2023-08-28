@@ -35,7 +35,7 @@ public class TransactionServiceImplTest {
     @Mock
     PersonService personService;
 
-    @DisplayName("Try to get all transactions")
+   @DisplayName("Try to get all transactions")
     @Test
     void getAllTransactions() {
         //Given an initial list of transactions

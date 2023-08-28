@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<a th:fragment="paging(pageNum, label, tooltip)" class="page-link" th:href="@{'/tax-view?' + 'page=' + ${pageNum}}" th:title="${tooltip}" rel="tooltip">
+  [[${label}]]
+</a>

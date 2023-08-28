@@ -169,7 +169,7 @@
         <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered mt-2" id="transactionTable">
                 <thead>
-                <h5 class="text-left">My Transactions(in gray the transfers you have made, in white those received)</h5>
+                <h5 class="text-left">My Transactions</h5>
                 <tr class="bg-success text-white">
                     <th>Connection</th>
                     <th>Description</th>
@@ -178,14 +178,20 @@
                 </tr>
                 </thead>
                 <tbody>
+
                 <tr th:each="transaction: ${transactions}" class=""
-                    th:classappend="${transaction.getDebtor.getEmail() == authentication? 'bg-secondary' : ''}"  >
+                    th:classappend="${transaction.getDebtor().getEmail() == authentication and transaction.getCreditor().getEmail() == authentication}? 'bg-warning' :
+                                   (${transaction.getDebtor().getEmail() == authentication}? 'bg-secondary' : '')">
+
                     <td th:text="${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()}"></td>
                     <td th:text="${transaction.getDescription()}"></td>
                     <td th:text="${transaction.getTransferAmount()+'€'}"></td>
-                    <td th:text="${transaction.getTaxAmount()+'€'}"></td>
+                    <td th:text="${transaction.getTaxAmount() != null}? ${transaction.getTaxAmount()+'€'} : 'Tax free'"></td>
+
                 </tr>
                 </tbody>
+                <p>(In gray the transfers you have made, in white those received and in yellow those from/to extern
+                    account)</p>
             </table>
 
 
@@ -193,27 +199,27 @@
             <nav aria-label="Pagination" th:if="${totalPages > 0}">
                 <ul class="pagination justify-content-center">
                     <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                        <a th:replace="~{fragments/paging :: paging(1, '<<', 'First Page')}"></a>
+                        <a th:replace="~{fragments/paging-transfer :: paging(1, '<<', 'First Page')}"></a>
                     </li>
                     <li class="page-item font-weight-bold" th:classappend="${currentPage == 1} ? 'disabled'">
-                        <a th:replace="~{fragments/paging :: paging(${currentPage - 1}, 'Prev', 'Previous Page')}"></a>
+                        <a th:replace="~{fragments/paging-transfer :: paging(${currentPage - 1}, 'Prev', 'Previous Page')}"></a>
                     </li>
                     <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
                         <a class="page-link" href="#">...</a>
                     </li>
                     <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
                         th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
-                        <a th:replace="~{fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page})}"></a>
+                        <a th:replace="~{fragments/paging-transfer :: paging(${page}, ${page}, 'Page ' + ${page})}"></a>
                     </li>
                     <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
                         <a class="page-link" href="#">...</a>
                     </li>
                     <li class="page-item font-weight-bold"
                         th:classappend="${currentPage == totalPages} ? 'disabled'">
-                        <a th:replace="~{fragments/paging :: paging(${currentPage + 1},'Next', 'Next Page')}"></a>
+                        <a th:replace="~{fragments/paging-transfer :: paging(${currentPage + 1},'Next', 'Next Page')}"></a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                        <a th:replace="~{fragments/paging :: paging(${totalPages}, '>>', 'Last Page')}"></a>
+                        <a th:replace="~{fragments/paging-transfer :: paging(${totalPages}, '>>', 'Last Page')}"></a>
                     </li>
                 </ul>
             </nav>
@@ -239,8 +245,6 @@
       function closeForm() {
         document.getElementById("popupForm").style.display = "none";
       }
-
-
 </script>
 <script language="javascript">
 const input = document.querySelector(".amount");
@@ -251,7 +255,6 @@ input.addEventListener("change", updateValue);
 function updateValue(e) {
   taxe.textContent = "Expected tax for this transaction : " + Math.round(((e.target.value)*0.05)*100)/100 + " €";
 }
-
 
 </script>
 

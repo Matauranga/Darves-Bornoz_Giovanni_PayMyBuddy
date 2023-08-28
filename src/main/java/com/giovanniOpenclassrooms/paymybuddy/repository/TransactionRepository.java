@@ -21,4 +21,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
      * @return a list of transactions
      */
     Page<Transaction> findAllByCreditorOrDebtorOrderByOperationDateDesc(Person creditor, Person debtor, Pageable pageable);
+
 }

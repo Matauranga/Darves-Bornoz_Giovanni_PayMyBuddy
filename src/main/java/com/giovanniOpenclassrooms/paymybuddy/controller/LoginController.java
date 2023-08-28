@@ -31,10 +31,10 @@ public class LoginController {
      *
      * @return the login page
      */
-    /*@GetMapping("/error") //TODO Frank j'enlevè ?
+    @GetMapping("/error")
     public String error() {
         return "redirect:/login";
-    }*/
+    }
 
 
     /**

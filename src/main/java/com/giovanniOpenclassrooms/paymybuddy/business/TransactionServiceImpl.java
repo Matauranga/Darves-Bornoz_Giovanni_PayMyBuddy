@@ -108,6 +108,8 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     /**
+     * Method to take off money from the PMB account
+     *
      * @param email       the email of the person who want to take off his money
      * @param debitAmount The amount to take off at the account
      */
@@ -124,6 +126,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     /**
+     * Method to fill the PMB account with money
+     *
      * @param email        the email of the person who want to add some money on his account
      * @param creditAmount The amount to add at the account
      */
@@ -142,6 +146,11 @@ public class TransactionServiceImpl implements TransactionService {
 
     public Page<Transaction> getPagedTransactionsByPersonSortByMostRecentDate(Person person, Pageable pageable) {
         return transactionRepository.findAllByCreditorOrDebtorOrderByOperationDateDesc(person, person, pageable);
+    }
+
+
+    public Page<Transaction> getAllTransactionsPageable(Pageable pageable) {
+        return transactionRepository.findAll(pageable);
     }
 
 }
