@@ -17,7 +17,7 @@ public class PersonFaker {
 
     public static Person generate() {
         Person person = new Person();
-        person.setPersonId(UUID.randomUUID());
+        person.setId(UUID.randomUUID());
         person.setFirstname(faker.address().firstName());
         person.setLastname(faker.address().lastName());
         person.setEmail(faker.internet().emailAddress());

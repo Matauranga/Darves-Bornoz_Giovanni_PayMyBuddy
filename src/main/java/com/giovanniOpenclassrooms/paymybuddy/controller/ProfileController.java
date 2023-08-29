@@ -82,7 +82,7 @@ public class ProfileController {
      * @return the login page
      */
     @PostMapping("/delete")
-    public String deleteAccount(Authentication authentication) { //TODO Frank pourquoi ça ne marche pas sur un des compte crée dans data.sql
+    public String deleteAccount(Authentication authentication) {
 
         personService.deletePerson(personService.getPersonByEmail(authentication.getName()));
         loginController.login();

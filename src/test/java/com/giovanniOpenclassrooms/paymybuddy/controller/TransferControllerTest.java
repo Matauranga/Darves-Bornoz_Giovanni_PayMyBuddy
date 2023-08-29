@@ -1,7 +1,6 @@
 package com.giovanniOpenclassrooms.paymybuddy.controller;
 
 import com.giovanniOpenclassrooms.paymybuddy.DTO.TransferDTO;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +123,6 @@ class TransferControllerTest {
 
     }
 
-
     @DisplayName("Try to fill a PMB account")
     @Test
     @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
@@ -140,24 +138,6 @@ class TransferControllerTest {
                 //Then we verify is all works correctly
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Congratulations your transfer works!")));
-    }
-
-    @Disabled //TODO les 2 disabled, est t'il possible de simuler leur échec
-    @DisplayName("Try to fill a PMB account but failed")
-    @Test
-    @WithMockUser(username = "dédé@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
-    void creditMoneyOnPMBAccountFailed() throws Exception {
-        //Given an email for the connection to add
-        BigDecimal amount = new BigDecimal("20.0");
-
-        //When we initiate the request
-        mockMvc.perform(post("/transfer/credit-account")
-                        .param("creditAmount", String.valueOf(amount)))
-                .andDo(MockMvcResultHandlers.print())
-
-                //Then we verify is all works correctly
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Oops something went wrong, please try again!")));
     }
 
     @DisplayName("Try to take off money from a PMB account")
@@ -194,21 +174,4 @@ class TransferControllerTest {
                 .andExpect(content().string(containsString("You don't have enough money in your account, fill it up or change the amount of your transfer.")));
     }
 
-    @Disabled
-    @DisplayName("Try to take off money from a PMB account, but failed")
-    @Test
-    @WithMockUser(username = "g@mail.fr", password = "$2a$10$oXfEHt.q8PBFXzuaY1t2/.wmLHSPi8ON8Cb8TDKAMo2/IsbfCGEnG")
-    void debitMoneyFromPMBAccountFailed() throws Exception {
-        //Given an email for the connection to add
-        BigDecimal amount = new BigDecimal("");
-
-        //When we initiate the request
-        mockMvc.perform(post("/transfer/debit-account")
-                        .param("debitAmount", String.valueOf(amount)))
-                .andDo(MockMvcResultHandlers.print())
-
-                //Then we verify is all works correctly
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Oops something went wrong, please try again!")));
-    }
 }

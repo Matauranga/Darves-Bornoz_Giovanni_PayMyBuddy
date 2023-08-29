@@ -27,7 +27,7 @@ public interface TransactionService {
 
     Page<Transaction> getPagedTransactionsByPersonSortByMostRecentDate(Person person, Pageable pageable);
 
-    public Page<Transaction> getAllTransactionsPageable(Pageable pageable);
+    Page<Transaction> getAllTransactionsPageable(Pageable pageable);
 
 
 }

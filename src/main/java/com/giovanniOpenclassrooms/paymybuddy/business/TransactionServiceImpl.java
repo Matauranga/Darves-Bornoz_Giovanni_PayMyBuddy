@@ -27,8 +27,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
     @Autowired
-    private PersonService personService; //TODO Frank impl ou interface
+    private PersonService personService;
 
     @Autowired
     private PersonRepository personRepository;
@@ -62,8 +63,8 @@ public class TransactionServiceImpl implements TransactionService {
     public List<Transaction> getTransactionsByPerson(Person person) {
 
         return getAllTransactions().stream()
-                .filter(transaction -> person.getPersonId().equals(transaction.getDebtor().getPersonId())
-                        || person.getPersonId().equals(transaction.getCreditor().getPersonId()))
+                .filter(transaction -> person.getId().equals(transaction.getDebtor().getId())
+                        || person.getId().equals(transaction.getCreditor().getId()))
                 .toList();
     }
 
@@ -77,7 +78,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         final BigDecimal amount = transactionDTO.amount().setScale(2, RoundingMode.HALF_EVEN);
 
-        BigDecimal amountTax = amount.multiply(Tax.TAXE_VALUE).setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal amountTax = amount.multiply(Tax.TAX_VALUE).setScale(2, RoundingMode.HALF_EVEN);
         log.info("Amount of Tax to be deducted : {} €", amountTax);
 
         final BigDecimal amountAfterTax = amount.add(amountTax);

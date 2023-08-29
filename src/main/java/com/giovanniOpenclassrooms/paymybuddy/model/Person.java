@@ -25,8 +25,7 @@ import java.util.UUID;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "person_id")
-    private UUID personId;
+    private UUID id;
 
     private String firstname;
 
@@ -45,23 +44,25 @@ public class Person {
     @Column(name = "amount_balance", nullable = false)
     private BigDecimal amountBalance = BigDecimal.ZERO;
 
-    @JoinTable(name = "person_friends", joinColumns = {
-            @JoinColumn(name = "owner", referencedColumnName = "person_id", nullable = false)
-    }, inverseJoinColumns = {
-            @JoinColumn(name = "friend", referencedColumnName = "person_id", nullable = false)
-    })
     @ManyToMany(fetch = FetchType.EAGER)
     List<Person> connectionsList = new ArrayList<>();
 
+
     /**
      * @param amount The amount to credit
-     * @return the amount
+     * @return the new amount
      */
     public Person creditBalance(BigDecimal amount) {
         amountBalance = amountBalance.add(amount);
         return this;
     }
 
+
+    /**
+     *
+     * @param amount The amount to debit
+     * @return the new amount
+     */
     public Person debitBalance(BigDecimal amount) {
 
         if (amountBalance.subtract(amount).doubleValue() < 0) {
@@ -72,11 +73,4 @@ public class Person {
         return this;
     }
 
-    public Person(String firstname, String lastname, String email, String password, BigDecimal amountBalance) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.amountBalance = amountBalance;
-    }
 }

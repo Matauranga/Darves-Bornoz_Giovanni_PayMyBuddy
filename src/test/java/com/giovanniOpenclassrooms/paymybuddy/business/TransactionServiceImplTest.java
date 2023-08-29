@@ -50,6 +50,7 @@ public class TransactionServiceImplTest {
 
         //Then we verify if we get persons
         assertThat(response).isNotEmpty().containsAll(transactions);
+        assertThat(response.get(0).getOperationDate()).isNotNull();
         verify(transactionRepository, times(1)).findAll();
     }
 
@@ -58,7 +59,7 @@ public class TransactionServiceImplTest {
     void getTransactionById() {
         //Given an initial transaction with an id
         Transaction transaction = TransactionFaker.generate();
-        UUID uuidTransaction = transaction.getTransactionId();
+        UUID uuidTransaction = transaction.getId();
 
         //When we try to get this transaction
         when(transactionRepository.findById(any())).thenReturn(Optional.of(transaction));
@@ -101,11 +102,11 @@ public class TransactionServiceImplTest {
     void transferElectronicMoney() {
         //Given an initial money transfer
         Person debtor = PersonFaker.generate();
-        UUID debtorId = debtor.getPersonId();
+        UUID debtorId = debtor.getId();
         debtor.setAmountBalance(new BigDecimal("50.00"));
 
         Person creditor = PersonFaker.generate();
-        UUID creditorId = creditor.getPersonId();
+        UUID creditorId = creditor.getId();
         creditor.setAmountBalance(new BigDecimal("50.00"));
 
         TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.00"), "Yo");
@@ -127,12 +128,12 @@ public class TransactionServiceImplTest {
     void transferElectronicMoneyFailedNotMoney() {
         //Given an initial money transfer with a debtor without money
         Person debtor = PersonFaker.generate();
-        UUID debtorId = debtor.getPersonId();
+        UUID debtorId = debtor.getId();
         debtor.setAmountBalance(new BigDecimal("0.0"));
 
 
         Person creditor = PersonFaker.generate();
-        UUID creditorId = creditor.getPersonId();
+        UUID creditorId = creditor.getId();
         creditor.setAmountBalance(new BigDecimal("50.0"));
 
         TransactionDTO transactionDTO = new TransactionDTO(debtorId, creditorId, new BigDecimal("5.0"), "Yo");
@@ -232,27 +233,4 @@ public class TransactionServiceImplTest {
         verify(personRepository, times(1)).save(any());
 
     }
-/*
-    @Disabled
-    @DisplayName("Get all transaction sort by date and pagined")//TODO Frank : pas compris comment tester
-    @Test
-    void getPagedTransactionsByPersonSortByMostRecentDate() {
-        //Given an initial person list of trasnfer
-        Person person = PersonFaker.generate();
-        Transaction transaction1 = TransactionFaker.generate();
-        Transaction transaction2 = TransactionFaker.generate();
-        transaction1.setDebtor(person);
-        transaction2.setCreditor(person);
-
-        Page<Transaction> transactions = (Page<Transaction>) List.of(transaction1, transaction2);
-
-        //When we try to get the trasnfer list
-        when(transactionRepository.findAllByCreditorOrDebtorOrderByOperationDateDesc(any(), any(), any())).thenReturn(transactions);
-        transactionServiceImpl.getPagedTransactionsByPersonSortByMostRecentDate(person, PageRequest.of(2 - 1, 1));
-
-        //Then we verify if the transfer don't work
-        verify(transactionServiceImpl, times(1)).getPagedTransactionsByPersonSortByMostRecentDate(any(), any());
-
-
-    }*/
 }

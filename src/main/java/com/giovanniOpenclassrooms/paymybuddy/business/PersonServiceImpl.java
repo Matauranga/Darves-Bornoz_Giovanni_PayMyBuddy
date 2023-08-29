@@ -22,6 +22,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private PersonRepository personRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -70,8 +71,7 @@ public class PersonServiceImpl implements PersonService {
      * @param authenticationEmail email of the person we wants modify
      * @param updatePersonDTO     to modify return by the front in a DTO
      */
-    public void updatePerson(String authenticationEmail, UpdatePersonDTO updatePersonDTO) {//TODO : à peaufiner
-
+    public void updatePerson(String authenticationEmail, UpdatePersonDTO updatePersonDTO) {
         if (!personRepository.existsByEmail(authenticationEmail)) {
             throw new NotFoundException("Person doesn't exists");
         }
@@ -97,7 +97,7 @@ public class PersonServiceImpl implements PersonService {
      * @param personToDelete the person to delete
      */
     public void deletePerson(Person personToDelete) {
-        personRepository.deleteById(personToDelete.getPersonId());//TODO FRANK : fonctionne mais ne fonctionne pas
+        personRepository.deleteById(personToDelete.getId());
     }
 
     /**
@@ -109,7 +109,7 @@ public class PersonServiceImpl implements PersonService {
     public void addConnection(Person person, Person friend) {
 
         try {
-            if (personRepository.existsByEmail(friend.getEmail()) && !person.getPersonId().equals(friend.getPersonId()) && !person.getConnectionsList().contains(friend)) {
+            if (personRepository.existsByEmail(friend.getEmail()) && !person.getId().equals(friend.getId()) && !person.getConnectionsList().contains(friend)) {
                 person.getConnectionsList().add(friend);
                 savePerson(person);
             } else {
