@@ -8,8 +8,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Getter
-@AllArgsConstructor
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class TransferDTO {
     private String creditorEmail;

@@ -60,7 +60,7 @@ public class PersonServiceImplTest {
 
         //When we try to get this person
         when(personRepository.findById(any())).thenReturn(Optional.of(person));
-        Optional<Person> response = personServiceImpl.getPersonById(person.getPersonId());
+        Optional<Person> response = personServiceImpl.getPersonById(person.getId());
 
         //Then we verify if we have the good person and if all works correctly
         assertThat(response).isNotEmpty().contains(person);
@@ -102,7 +102,7 @@ public class PersonServiceImplTest {
 
     @DisplayName("Test to update a person")
     @Test
-    void updatePerson() {//TODO a modifier quant la fonction update sera modifié
+    void updatePerson() {
         //Given an initial person to modify and the updates
         Person person = PersonFaker.generate();
         String authenticationEmail = person.getEmail();
@@ -320,6 +320,7 @@ public class PersonServiceImplTest {
         //Then we check that we haven't saved the person
         assertThat(personInformationDTO.getEmail()).isEqualTo(personEmail);
         assertThat(personInformationDTO.getBirthdate()).isEqualTo(person.getBirthdate());
+        assertThat(personInformationDTO.getPassword()).isEqualTo(null);
         verify(personRepository, times(1)).existsByEmail(any());
         verify(personRepository, times(1)).findByEmail(any());
     }

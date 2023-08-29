@@ -85,7 +85,7 @@
 
     <!-- Preparation de transfert + submit-->
     <div style="display: block;background-color: #eeeeee;padding:1em;">
-        <form id="transferDTO" action="#" th:action="@{/transfer-request}" method="post" class="form-group"
+        <form id="transferDTO" th:action="@{/transfer-request}" method="post" class="form-group"
               th:object="${transferDTO}">
             <div class="row mb-2">
                 <div class="col-md-4">
@@ -167,7 +167,7 @@
     <!-- block sur historique de transfert -->
     <div class="mt-5">
         <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered mt-2" id="transactionTable">
+            <table class="table table-hover table-bordered mt-2" id="transactionTable">
                 <thead>
                 <h5 class="text-left">My Transactions</h5>
                 <tr class="bg-success text-white">
@@ -180,17 +180,19 @@
                 <tbody>
 
                 <tr th:each="transaction: ${transactions}" class=""
-                    th:classappend="${transaction.getDebtor().getEmail() == authentication and transaction.getCreditor().getEmail() == authentication}? 'bg-warning' :
-                                   (${transaction.getDebtor().getEmail() == authentication}? 'bg-secondary' : '')">
+                    th:classappend="${transaction.getDebtor().getEmail() == authentication and transaction.getCreditor().getEmail() == authentication}? 'alert alert-warning' :
+                                   (${transaction.getDebtor().getEmail() == authentication}? 'alert alert-danger' : '')">
 
-                    <td th:text="${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()}"></td>
+                    <td th:text="${transaction.getCreditor().getEmail() == authentication}?
+                                                        ${transaction.getDebtor().getFirstname() + ' ' + transaction.getDebtor().getLastname()} :
+                                                        ${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()} "></td>
                     <td th:text="${transaction.getDescription()}"></td>
                     <td th:text="${transaction.getTransferAmount()+'€'}"></td>
                     <td th:text="${transaction.getTaxAmount() != null}? ${transaction.getTaxAmount()+'€'} : 'Tax free'"></td>
 
                 </tr>
                 </tbody>
-                <p>(In gray the transfers you have made, in white those received and in yellow those from/to extern
+                <p class="text-primary">(In red the transfers you have made, in white those received and in yellow those from/to extern
                     account)</p>
             </table>
 

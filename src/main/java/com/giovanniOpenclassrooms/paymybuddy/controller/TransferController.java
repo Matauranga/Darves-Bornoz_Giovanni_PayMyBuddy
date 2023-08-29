@@ -152,7 +152,7 @@ public class TransferController {
             BigDecimal amount = transferDTO.getAmount();
             String description = transferDTO.getDescription();
 
-            transactionService.transferElectronicMoney(new TransactionDTO(debtor.getPersonId(), creditor.getPersonId(), amount, description));
+            transactionService.transferElectronicMoney(new TransactionDTO(debtor.getId(), creditor.getId(), amount, description));
 
             model.addAttribute("successTransfer", true);
 

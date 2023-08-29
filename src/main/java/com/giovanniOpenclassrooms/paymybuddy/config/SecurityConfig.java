@@ -32,7 +32,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                //   .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.NEVER)) //TODO problem 1er log
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/sign-up/**", "/transfer/**", "/actuator/**", "/profile/**", "/home/**", "/error/**").permitAll()
                                 .requestMatchers(toH2Console()).permitAll()
@@ -44,7 +43,7 @@ public class SecurityConfig {
                                 .usernameParameter("email")
                                 .passwordParameter("password")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/transfer")
+                                .defaultSuccessUrl("/transfer", true)
                                 .permitAll()
 
                 ).logout(

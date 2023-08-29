@@ -33,7 +33,7 @@
                 <tbody>
 
                 <tr th:each="transaction: ${transactions}" class=""
-                    th:classappend="${transaction.getTaxAmount() != null}? 'bg-warning' : ''">
+                    th:classappend="${transaction.getTaxAmount() != null}? 'alert alert-info' : ''">
                     <td th:text="${transaction.getDebtor().getFirstname() + ' ' + transaction.getDebtor().getLastname()}"></td>
                     <td th:text="${transaction.getCreditor().getFirstname() + ' ' + transaction.getCreditor().getLastname()}"></td>
                     <td th:text="${transaction.getDescription()}"></td>

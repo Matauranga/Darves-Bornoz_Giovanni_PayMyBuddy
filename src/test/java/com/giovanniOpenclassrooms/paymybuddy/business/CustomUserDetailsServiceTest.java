@@ -53,6 +53,6 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    void getAuthorities() { //TODO Frank
+    void getAuthorities() {
     }
 }

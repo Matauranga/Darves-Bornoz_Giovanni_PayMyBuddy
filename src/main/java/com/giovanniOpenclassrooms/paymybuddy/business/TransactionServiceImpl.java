@@ -27,6 +27,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
     @Autowired
     private PersonService personService; //TODO Frank impl ou interface
 
@@ -62,8 +63,8 @@ public class TransactionServiceImpl implements TransactionService {
     public List<Transaction> getTransactionsByPerson(Person person) {
 
         return getAllTransactions().stream()
-                .filter(transaction -> person.getPersonId().equals(transaction.getDebtor().getPersonId())
-                        || person.getPersonId().equals(transaction.getCreditor().getPersonId()))
+                .filter(transaction -> person.getId().equals(transaction.getDebtor().getId())
+                        || person.getId().equals(transaction.getCreditor().getId()))
                 .toList();
     }
 

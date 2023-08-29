@@ -30,6 +30,14 @@ class LoginControllerTest {
 
     }
 
+    @DisplayName("Try to perform method get on /error")
+    @Test
+    void error() throws Exception {
+        mockMvc.perform(get("/error"))
+                .andExpect(status().isFound());
+
+    }
+
     @DisplayName("Try to perform method get on /signUp")
     @Test
     void showRegistrationForm() throws Exception {
