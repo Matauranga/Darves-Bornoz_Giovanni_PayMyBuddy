@@ -74,19 +74,4 @@ public class ProfileController {
         return "profile";
     }
 
-
-    /**
-     * Handler method to delete an account
-     *
-     * @param authentication the parameter that contains information about the logged in person
-     * @return the login page
-     */
-    @PostMapping("/delete")
-    public String deleteAccount(Authentication authentication) {
-
-        personService.deletePerson(personService.getPersonByEmail(authentication.getName()));
-        loginController.login();
-
-        return "redirect:/login";
-    }
 }

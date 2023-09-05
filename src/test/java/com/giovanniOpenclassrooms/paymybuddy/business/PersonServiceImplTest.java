@@ -178,20 +178,6 @@ public class PersonServiceImplTest {
     }
 
 
-    @DisplayName("Test to delete a person")
-    @Test
-    void deletePerson() {
-        //Given a person to delete
-        Person personToDelete = PersonFaker.generate();
-
-        //When we delete the person
-        personServiceImpl.deletePerson(personToDelete);
-
-        //Then we verify if this have works correctly
-        verify(personRepository, times(1)).deleteById(any());
-    }
-
-
     @DisplayName("Test to add a connection")
     @Test
     void addConnection() {

@@ -20,8 +20,6 @@ public interface PersonService {
 
     void updatePerson(String authenticationEmail, UpdatePersonDTO person);
 
-    void deletePerson(Person personToDelete);
-
     void addConnection(Person person, Person friend);
 
     void removeConnection(Person person, Person friendToDelete);

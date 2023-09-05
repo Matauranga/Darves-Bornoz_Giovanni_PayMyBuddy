@@ -92,15 +92,6 @@ public class PersonServiceImpl implements PersonService {
 
 
     /**
-     * Method to delete a person from database
-     *
-     * @param personToDelete the person to delete
-     */
-    public void deletePerson(Person personToDelete) {
-        personRepository.deleteById(personToDelete.getId());
-    }
-
-    /**
      * Method to add connection between two user of the application
      *
      * @param person the person who add connection

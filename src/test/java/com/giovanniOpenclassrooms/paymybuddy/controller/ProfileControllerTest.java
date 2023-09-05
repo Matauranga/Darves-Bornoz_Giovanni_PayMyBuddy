@@ -65,19 +65,4 @@ class ProfileControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("Test to delete friend")
-    @Test
-    @WithMockUser(username = "baba@mail.fr", password = "$2a$10$3GusYEcweJL1DdndZgPFkOAP7ItDMYPug57mxd6hWuDf/Nxn9OTta")
-    void deleteAccount() throws Exception {
-        //Given initial person email to delete
-
-        //When we initiate the request
-        mockMvc.perform(post("/delete"))
-
-                .andDo(MockMvcResultHandlers.print())
-                //Then we verify is all works correctly
-                .andExpect(status().isFound());
-
-
-    }
 }
