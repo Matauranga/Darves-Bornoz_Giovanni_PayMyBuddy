@@ -10,11 +10,3 @@ public class PayMyBuddyApplication {
         SpringApplication.run(PayMyBuddyApplication.class, args);
     }
 }
-
-
-/* TODO:
-        revoir le digramme :
-        faire les script sql
-        faire les livrables
-
- */
