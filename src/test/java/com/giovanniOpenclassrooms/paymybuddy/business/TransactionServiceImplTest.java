@@ -233,27 +233,4 @@ public class TransactionServiceImplTest {
         verify(personRepository, times(1)).save(any());
 
     }
-/*
-    @Disabled
-    @DisplayName("Get all transaction sort by date and pagined")//TODO Frank : pas compris comment tester
-    @Test
-    void getPagedTransactionsByPersonSortByMostRecentDate() {
-        //Given an initial person list of trasnfer
-        Person person = PersonFaker.generate();
-        Transaction transaction1 = TransactionFaker.generate();
-        Transaction transaction2 = TransactionFaker.generate();
-        transaction1.setDebtor(person);
-        transaction2.setCreditor(person);
-
-        Page<Transaction> transactions = (Page<Transaction>) List.of(transaction1, transaction2);
-
-        //When we try to get the trasnfer list
-        when(transactionRepository.findAllByCreditorOrDebtorOrderByOperationDateDesc(any(), any(), any())).thenReturn(transactions);
-        transactionServiceImpl.getPagedTransactionsByPersonSortByMostRecentDate(person, PageRequest.of(2 - 1, 1));
-
-        //Then we verify if the transfer don't work
-        verify(transactionServiceImpl, times(1)).getPagedTransactionsByPersonSortByMostRecentDate(any(), any());
-
-
-    }*/
 }

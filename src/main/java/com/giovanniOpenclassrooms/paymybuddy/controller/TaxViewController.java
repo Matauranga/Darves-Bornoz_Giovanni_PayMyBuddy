@@ -1,6 +1,5 @@
 package com.giovanniOpenclassrooms.paymybuddy.controller;
 
-import com.giovanniOpenclassrooms.paymybuddy.business.PersonService;
 import com.giovanniOpenclassrooms.paymybuddy.business.TransactionService;
 import com.giovanniOpenclassrooms.paymybuddy.constants.PageView;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
@@ -15,15 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class TaxViewController {
+
     @Autowired
     private TransactionService transactionService;
-    @Autowired
-    private PersonService personService;
 
     /**
      * Handler method to handle home request
      *
-     * @return the tax-view page
      */
     @GetMapping("/tax-view")
     public void profile(Authentication authentication, Model model, @RequestParam(defaultValue = "1") Integer page) {

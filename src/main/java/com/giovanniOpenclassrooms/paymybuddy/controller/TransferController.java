@@ -8,7 +8,6 @@ import com.giovanniOpenclassrooms.paymybuddy.constants.PageView;
 import com.giovanniOpenclassrooms.paymybuddy.exceptions.NegativeBalanceAccountException;
 import com.giovanniOpenclassrooms.paymybuddy.model.Person;
 import com.giovanniOpenclassrooms.paymybuddy.model.Transaction;
-import com.giovanniOpenclassrooms.paymybuddy.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,9 +29,6 @@ public class TransferController {
 
     @Autowired
     private PersonService personService;
-
-    @Autowired
-    private PersonRepository personRepository;
 
 
     /**
@@ -103,11 +99,7 @@ public class TransferController {
             transactionService.transferMoneyFromExternAccountToPMBAccount(authentication.getName(), creditAmount);
             model.addAttribute("successTransfer", true);
 
-        } /*catch (Exception exception) {
-            model.addAttribute("transferFailed", exception.getMessage());
-            return "transfer";
-
-        }*/ finally {
+        }finally {
             getTransfer(authentication, model, 1);
         }
         return "transfer";
@@ -125,11 +117,7 @@ public class TransferController {
             model.addAttribute("NotEnoughMoney", true);
             return "transfer";
 
-        } /*catch (Exception exception) {
-            model.addAttribute("transferFailed", exception.getMessage());
-            return "transfer";
-
-        } */ finally {
+        } finally {
             getTransfer(authentication, model, 1);
         }
         return "transfer";

@@ -44,7 +44,7 @@ public class Person {
     @Column(name = "amount_balance", nullable = false)
     private BigDecimal amountBalance = BigDecimal.ZERO;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     List<Person> connectionsList = new ArrayList<>();
 
 

@@ -29,7 +29,7 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository transactionRepository;
 
     @Autowired
-    private PersonService personService; //TODO Frank impl ou interface
+    private PersonService personService;
 
     @Autowired
     private PersonRepository personRepository;
@@ -78,7 +78,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         final BigDecimal amount = transactionDTO.amount().setScale(2, RoundingMode.HALF_EVEN);
 
-        BigDecimal amountTax = amount.multiply(Tax.TAXE_VALUE).setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal amountTax = amount.multiply(Tax.TAX_VALUE).setScale(2, RoundingMode.HALF_EVEN);
         log.info("Amount of Tax to be deducted : {} €", amountTax);
 
         final BigDecimal amountAfterTax = amount.add(amountTax);
