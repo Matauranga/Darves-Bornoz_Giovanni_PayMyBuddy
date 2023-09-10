@@ -72,7 +72,7 @@ public class TransferController {
      * @return the transfer page
      */
     @PostMapping("/transfer/add-friend")
-    public String addFriend(Authentication authentication, String friendEmail, Model model) {
+    public String addConnection(Authentication authentication, String friendEmail, Model model) {
 
         try {
             personService.addConnection(

@@ -79,7 +79,6 @@ public class TransactionServiceImplTest {
         Person person3 =PersonFaker.generate();
 
 
-
         Transaction transaction1 = new Transaction(person1, person2,null, null, null);
         Transaction transaction2 = new Transaction(person3, person1, null, null,null);
         Transaction transaction3 = new Transaction(person2, person3, null, null,null);
@@ -121,6 +120,7 @@ public class TransactionServiceImplTest {
         verify(personRepository, times(1)).saveAll(any());
         verify(transactionRepository, times(1)).save(any());
         assertThat(creditor.getAmountBalance()).isEqualTo(new BigDecimal("55.00"));
+        assertThat(debtor.getAmountBalance()).isEqualTo(new BigDecimal("44.75"));
     }
 
     @DisplayName("Try to proceed to an electronic transfer without enough money")
